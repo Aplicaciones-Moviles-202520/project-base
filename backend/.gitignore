@@ -25,6 +25,7 @@ storage/*
 # Ignore dotenv environment variables files
 .env
 .env.*
+!.env.example
 
 # Ignore Rails 6+ encrypted credentials
 /config/credentials/*.enc
