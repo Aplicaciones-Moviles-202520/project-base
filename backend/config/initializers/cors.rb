@@ -14,3 +14,26 @@
 #       methods: [:get, :post, :put, :patch, :delete, :options, :head]
 #   end
 # end
+
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  if Rails.env.development? || Rails.env.test?
+    allow do
+      origins ENV.fetch("FRONTEND_ORIGIN", "http://localhost:3000")
+      resource "*",
+               headers: :any,
+               methods: %i[get post put patch delete options head],
+               credentials: true
+    end
+  else
+    allowed_origin = ENV["FRONTEND_ORIGIN"]
+    if allowed_origin.present?
+      allow do
+        origins allowed_origin
+        resource "*",
+                 headers: :any,
+                 methods: %i[get post put patch delete options head],
+                 credentials: true
+      end
+    end
+  end
+end
