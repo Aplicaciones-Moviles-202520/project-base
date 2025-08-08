@@ -7,7 +7,11 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :posts, only: [:index, :create]
-      resources :profiles, only: [:show, :update]
+      resources :countries, only: [:index, :show] do
+        collection do
+          get :search
+        end
+      end
     end
   end
 

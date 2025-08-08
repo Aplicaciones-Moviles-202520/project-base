@@ -55,4 +55,13 @@ group :development, :test do
   gem "dotenv-rails"
 end
 
+group :development, :test do
+  gem "rspec-rails", "~> 6.0"   # RSpec para Rails 8
+end
+
+group :test do
+  gem "factory_bot_rails"       # opcional, para factories
+  gem "faker"                   # opcional, datos de prueba
+end
+
 gem "csv", "~> 3.3.5"
