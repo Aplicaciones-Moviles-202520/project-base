@@ -17,16 +17,15 @@ Para actualizar el código base del proyecto de acuerdo a los anuncios de los pr
 El modelo de dominio de la aplicación que vamos a desarrollar tiene varias entidades y relaciones relevantes:
 
 1. Usuario (`User`): Un usuario registrado en la aplicación. Puede crear viajes, publicaciones y tener amigos de viaje (_travel buddies_). Se registra su nombre y apellido, sobrenombre ("_handle_" único a la usanza de las redes sociales), y su nacionalidad (`Country`).
-2. Amistad (`Friendship`): Una relación de amistad entre un `User` y otro. Es mutua y permite que los usuarios se agreguen como travel buddies en sus viajes.
-3. País (`Country`): Un país del mundo. Asociado tanto a `Locations` como a la nacionalidad de los `Users`.
-4. Viaje (`Trip`): Un viaje creado por un `User`. Está compuesto por una serie de ubicaciones (`Locations`) visitadas por el usuario, en un determinado orden temporal.
-5. Ubicación (`Location`): Un lugar geográfico (por ejemplo, ciudad o punto específico) que forma parte de un `Trip`. Está asociada a un `Country`.
-6. Post (`Post`): Una publicación realizada por un `User` en una `Location` durante un `Trip`. Puede contener texto y/o archivos multimedia.
-7. Imagen del `Post` (`Picture`): Una imagen asociada a un `Post`, que puede incluir etiquetas a otros `Users` (ver `Tag`).
-8. Video del `Post` (Video): Un video asociado a un `Post`.
-9. Audio del `Post` (Audio): Un archivo de audio asociado a un `Post`.
-10. Etiqueta (`Tag`): Representa la mención o identificación de un `User` en una `Picture`. Une un `Picture` con un `User`.
-11. Compañero de Viaje (`TravelBuddy`): Representa la participación de un `User` como acompañante en un `Trip` de otro `User`.
+2. País (`Country`): Un país del mundo. Asociado tanto a `Locations` como a la nacionalidad de los `Users`.
+3. Viaje (`Trip`): Un viaje creado por un `User`. Está compuesto por una serie de ubicaciones (`Locations`) visitadas por el usuario, en un determinado orden temporal.
+4. Ubicación (`Location`): Un lugar geográfico (por ejemplo, ciudad o punto específico) que forma parte de un `Trip`. Está asociada a un `Country`.
+5. Post (`Post`): Una publicación realizada por un `User` en una `Location` durante un `Trip`. Puede contener texto y/o archivos multimedia.
+6. Imagen del `Post` (`Picture`): Una imagen asociada a un `Post`, que puede incluir etiquetas a otros `Users` (ver `Tag`).
+7. Video del `Post` (Video): Un video asociado a un `Post`.
+8. Audio del `Post` (Audio): Un archivo de audio asociado a un `Post`.
+9. Etiqueta (`Tag`): Representa la mención o identificación de un `User` en una `Picture`. Une un `Picture` con un `User`.
+10. Compañero de Viaje (`TravelBuddy`): Representa la participación de un `User` como acompañante en un `Trip` de otro `User`.
 
 Relaciones:
 
