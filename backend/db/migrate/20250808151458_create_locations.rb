@@ -10,6 +10,6 @@ class CreateLocations < ActiveRecord::Migration[8.0]
     change_column_null :locations, :country_id, false
     change_column_null :locations, :name,       false
     add_index :locations, :name
-    add_index :locations, [:country_id, :name]    
+    add_index :locations, [ :country_id, :name ]
   end
 end

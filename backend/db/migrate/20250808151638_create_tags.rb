@@ -9,7 +9,7 @@ class CreateTags < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    add_index :tags, [:picture_id, :user_id], unique: true
+    add_index :tags, [ :picture_id, :user_id ], unique: true
     add_check_constraint :tags, "x_frac BETWEEN 0 AND 1", name: "chk_tags_x_frac_0_1"
     add_check_constraint :tags, "y_frac BETWEEN 0 AND 1", name: "chk_tags_y_frac_0_1"
   end

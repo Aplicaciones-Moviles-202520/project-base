@@ -14,8 +14,7 @@ rescue ActiveRecord::PendingMigrationError => e
   abort e.to_s.strip
 end
 
-# Requiere helpers adicionales si usas spec/support/*
-# Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
   # Indica que usarás ActiveRecord con RSpec
@@ -34,4 +33,8 @@ RSpec.configure do |config|
   # Inferir tipo de spec por ubicación (requests/, models/, etc.)
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
+
+  RSpec.configure do |config|
+    config.include AuthHelpers, type: :request
+  end
 end

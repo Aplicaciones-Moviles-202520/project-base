@@ -1,13 +1,15 @@
 Rails.application.routes.draw do
-  devise_for :users
-  #devise_for :users, defaults: { format: :json }, controllers: {
-  #  sessions: 'users/sessions'
-  #}
+  # devise_for :users
+  devise_for :users, defaults: { format: :json }, controllers: {
+    sessions: "users/sessions",
+    registrations: "users/registrations"
+  }
 
   namespace :api do
     namespace :v1 do
-      resources :posts, only: [:index, :create]
-      resources :countries, only: [:index, :show] do
+      resources :posts, only: [ :index, :create ]
+      resources :trips, only: [:index, :show, :create, :update, :destroy]
+      resources :countries, only: [ :index, :show ] do
         collection do
           get :search
         end

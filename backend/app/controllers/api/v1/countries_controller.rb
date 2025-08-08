@@ -1,7 +1,7 @@
 # app/controllers/api/v1/countries_controller.rb
 class API::V1::CountriesController < ApplicationController
   # Si tu API exige JWT globalmente, estos endpoints quedan públicos (read‑only)
-  skip_before_action :authenticate_user!, only: [:index, :show, :search] if respond_to?(:authenticate_user!)
+  skip_before_action :authenticate_user!, only: [ :index, :show, :search ] if respond_to?(:authenticate_user!)
 
   FIELDS = %i[id iso2 iso3 name_en name_es numeric_code calling_code region subregion].freeze
 

@@ -11,8 +11,8 @@ class CreateTripLocations < ActiveRecord::Migration[8.0]
     change_column_null :trip_locations, :trip_id,     false
     change_column_null :trip_locations, :location_id, false
     change_column_null :trip_locations, :position,    false
-    add_index :trip_locations, [:trip_id, :position],     unique: true
-    add_index :trip_locations, [:trip_id, :location_id],  unique: true
+    add_index :trip_locations, [ :trip_id, :position ],     unique: true
+    add_index :trip_locations, [ :trip_id, :location_id ],  unique: true
     add_check_constraint :trip_locations, "position > 0", name: "chk_trip_locations_position_gt_zero"
   end
 end

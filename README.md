@@ -113,31 +113,19 @@ Para iniciar la aplicación Rails por primera vez, ir al directorio `backend` en
 ```sh
 bundle install # verificar que las gemas queden instaladas correctamente
 ```
-Luego, se debe crear un archivo de configuración encriptado para Rails, incluyendo la clave para los tokens JWT utilizados por devise-jwt. Para esto, asegurarse primero de eliminar archivos `config/credentials/*.yml.enc` si es que el repositorio los contiene.
+Luego, se debe crear un archivo `.env` en donde mantener algunas variables de entorno críticas de la aplicación. Para esto:
 
 ```sh
-rm config/*.yml.enc
+cp .env.example .env
 ```
 
-Luego, se necesita crear una clave para que devise-jwt y Warden generen tokens JWT válidos:
+Luego, puedes editar el archivo `.env`. Hay una variable `DEVISE_JWT_SECRET_KEY` cuyo valor es utilizado para firmar tokens JWT usando HMAC256. El valor para esta variable puede generarse con el siguiente comando:
 
 ```sh
-rails runner "require 'securerandom'; puts SecureRandom.hex(64)"
+openssl rand -hex 64
 ```
 
-Copiar la clave generada en la consola.
-
-```sh
-EDITOR="nano" rails credentials:edit --environment test
-```
-
-Al final del archivo agregar una línea con el siguiente contenido:
-
-```
-devise_jwt_secret_key: [clave generada por comando anterior sin estos corchetes]
-```
-
-Guardar el archivo y salir. Repetir cambiando la opción `--environment test` por `--environment development`. Si se va a realizar una instalación de producción, se debe también realizar este paso con el ambiente `production`.
+Estando el archivo `.env` creado y completo con la variable `DEVISE_JWT_SECRET_KEY`, el paso siguiente es inicializar la base de datos.
 
 **Ejecutar las migraciones**
 
@@ -145,6 +133,14 @@ Se debe ejecutar las migraciones y verificar que no haya errores.
 
 ```sh
 rails db:migrate
+```
+
+**Ejecutar las seeds**
+
+El modelo `Countries` requiere datos que se cargan en seed:
+
+```sh
+rails db:seed
 ```
 
 **Ejecutar tests del backend Rails**

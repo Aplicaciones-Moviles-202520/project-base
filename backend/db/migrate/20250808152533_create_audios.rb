@@ -6,6 +6,6 @@ class CreateAudios < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    change_column_null :audios, :post_id, false    
+    change_column_null :audios, :post_id, false
   end
 end

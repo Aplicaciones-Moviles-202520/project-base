@@ -12,6 +12,6 @@ class CreateTrips < ActiveRecord::Migration[8.0]
     end
     change_column_null :trips, :user_id, false
     change_column_null :trips, :title,   false
-    add_index :trips, [:user_id, :created_at]
-  end  
+    add_index :trips, [ :user_id, :created_at ]
+  end
 end

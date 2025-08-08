@@ -2,10 +2,10 @@
 class TravelBuddy < ApplicationRecord
   belongs_to :trip
   belongs_to :user
-  belongs_to :met_location, class_name: 'Location', optional: true
+  belongs_to :met_location, class_name: "Location", optional: true
 
   validates :trip_id, uniqueness: { scope: :user_id }
-  validates :can_post, inclusion: { in: [true, false] }
+  validates :can_post, inclusion: { in: [ true, false ] }
 
   before_validation :prevent_self_buddy
 
