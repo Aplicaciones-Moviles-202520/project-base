@@ -1,6 +1,6 @@
 # Proyecto de Aplicaciones Móviles - Enunciado General del Proyecto
 
-Durante este semestre, el proyecto del curso consistirá en el desarrollo de una aplicación móvil orientada a la creación de una bitácora de viajes. La aplicación permitirá a cada usuario generar viajes que incluyan múltiples destinos, y registrar en ellos notas o publicaciones (posts) asociadas a las distintas ubicaciones visitadas. Estas publicaciones podrán contener texto, imágenes, video y audio.
+Durante este semestre, el proyecto del curso consistirá en el desarrollo de una aplicación móvil orientada a la creación de una bitácora de viajes. La aplicación permitirá a cada usuario generar viajes que incluyan múltiples destinos, y registrar en ellos notas o publicaciones (posts) asociadas a las distintas ubicaciones visitadas. Estas publicaciones podrán contener texto, imágenes y vídeos.
 
 Adicionalmente, los usuarios podrán gestionar una lista de travel buddies (amigos de viaje), incorporando a sus amistades durante el desarrollo de cada viaje. Las publicaciones podrán ser compartidas con estos compañeros, incluyendo funcionalidades como menciones y etiquetas (_tagging_) en fotografías u otros contenidos.
 
@@ -23,9 +23,8 @@ El modelo de dominio de la aplicación que vamos a desarrollar tiene varias enti
 5. Post (`Post`): Una publicación realizada por un `User` en una `Location` durante un `Trip`. Puede contener texto y/o archivos multimedia.
 6. Imagen del `Post` (`Picture`): Una imagen asociada a un `Post`, que puede incluir etiquetas a otros `Users` (ver `Tag`).
 7. Video del `Post` (Video): Un video asociado a un `Post`.
-8. Audio del `Post` (Audio): Un archivo de audio asociado a un `Post`.
-9. Etiqueta (`Tag`): Representa la mención o identificación de un `User` en una `Picture`. Une un `Picture` con un `User`.
-10. Compañero de Viaje (`TravelBuddy`): Representa la participación de un `User` como acompañante en un `Trip` de otro `User`.
+8. Etiqueta (`Tag`): Representa la mención o identificación de un `User` en una `Picture`. Une un `Picture` con un `User`.
+9. Compañero de Viaje (`TravelBuddy`): Representa la participación de un `User` como acompañante en un `Trip` de otro `User`.
 
 Relaciones:
 
