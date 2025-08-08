@@ -264,6 +264,7 @@ Devise.setup do |config|
   #
   # The "*/*" below is required to match Internet Explorer requests.
   # config.navigational_formats = ['*/*', :html, :turbo_stream]
+config.navigational_formats = []
 
   # The default HTTP method used to sign out a resource. Default is :delete.
   config.sign_out_via = :delete
@@ -310,26 +311,22 @@ Devise.setup do |config|
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
-end
 
-# == Devise JWT ==
-Devise.setup do |config|
+  # == devise-jwt ==
   config.jwt do |jwt|
     jwt.secret = ENV.fetch("DEVISE_JWT_SECRET_KEY")
-    jwt.dispatch_requests = [['POST', %r{^/users/sign_in$}]]
+    jwt.dispatch_requests  = [['POST', %r{^/users/sign_in$}]]
     jwt.revocation_requests = [['DELETE', %r{^/users/sign_out$}]]
-    jwt.request_formats = { user: [:json] }
+    jwt.request_formats = { user: [:json] }   # para /users/sign_in como JSON
+    jwt.expiration_time = 30.minutes.to_i
   end
-end
 
-# == Devise JWT Cookie (devise-jwt-cookie2) ==
-Devise.setup do |config|
-  config.jwt_cookie do |jwt_cookie|
-    jwt_cookie.name      = ENV.fetch("JWT_COOKIE_NAME", "app_jwt")
-    jwt_cookie.secure    = Rails.env.production?
-    jwt_cookie.httponly  = true
-    jwt_cookie.same_site = Rails.env.production? ? :none : :lax
-    # Nota: la expiración de la cookie debe ser <= exp del JWT (configúrala si fuese necesario)
-    # jwt_cookie.expires_in = 30.minutes
-  end
+  # == devise-jwt-cookie2 ==
+  config.jwt_cookie do |c|
+    c.name      = ENV.fetch("JWT_COOKIE_NAME", "app_jwt")
+    c.secure    = Rails.env.production?
+    c.httponly  = true
+    c.same_site = Rails.env.production? ? :none : :lax
+    # (opcional) c.expires_in = 30.minutes  # déjalo omitido si no lo necesitas
+  end  
 end
