@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DeviseCreateUsers < ActiveRecord::Migration[8.0]
+class AddDeviseToUsers < ActiveRecord::Migration[8.0]
   def change
     create_table :users do |t|
       ## Database authenticatable
@@ -35,6 +35,8 @@ class DeviseCreateUsers < ActiveRecord::Migration[8.0]
 
       t.timestamps null: false
     end
+
+    add_reference :users, :country, foreign_key: true, null: true
 
     add_index :users, :email,                unique: true
     add_index :users, :reset_password_token, unique: true

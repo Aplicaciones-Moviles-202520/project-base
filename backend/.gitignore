@@ -59,6 +59,9 @@ public/assets-dev
 .spring/
 
 # Ignore SQLite databases (if used in dev/test)
+storage/*.sqlite3
+storage/*.sqlite3-journal
+
 *.sqlite3
 *.sqlite3-journal
 

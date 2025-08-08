@@ -54,3 +54,5 @@ gem "devise-jwt-cookie2", "~> 0.6.0" # fork actualizado
 group :development, :test do
   gem "dotenv-rails"
 end
+
+gem "csv", "~> 3.3.5"
