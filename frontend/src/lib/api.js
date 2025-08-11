@@ -9,7 +9,7 @@ export async function signIn({ email, password }) {
   });
 
   let data = null;
-  try { data = await res.json(); } catch {}
+  try { data = await res.json(); } catch { /* empty */ }
 
   if (!res.ok) {
     const message = (data && (data.error || data.message)) || 'Login error';
