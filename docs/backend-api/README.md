@@ -1,5 +1,5 @@
 
-# Documentación de la API - Proyecto Bitácora de Viajes
+# Documentación de la API - Proyecto TravelLog
 
 1. [Introducción](#1-introducción)
 2. [Autenticación y Seguridad](#2-autenticación-y-seguridad)
@@ -32,7 +32,7 @@ Su objetivo es guiar a los estudiantes en la interacción con los distintos endp
 
 ### Descripción general de la API
 
-La API implementa la lógica de negocio y el modelo de dominio para la aplicación de bitácora de viajes.  
+La API implementa la lógica de negocio y el modelo de dominio para la aplicación TravelLog.  
 Entre sus funciones principales se incluyen:
 
 - **Gestión de usuarios**: registro, autenticación y manejo de perfiles.
@@ -1228,7 +1228,7 @@ curl -X POST \
 
 Para probar la API con **Postman**:
 
-1. Crear un nuevo entorno en Postman llamado, por ejemplo, *API Bitácora de Viajes*.
+1. Crear un nuevo entorno en Postman llamado, por ejemplo, *API TravelLog*.
 2. Configurar las siguientes variables de entorno:
 
    * `base_url`: `http://localhost:3001/api/v1`
