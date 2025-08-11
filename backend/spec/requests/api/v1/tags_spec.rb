@@ -23,7 +23,7 @@ RSpec.describe "API::V1::Tags", type: :request do
     end
   end
 
-  describe "POST /api/v1/pictures/:picture_id/tags" do
+  describe "POST /api/v1/pictures/:picture_id/tags", :auth do
     it "crea un tag por user_id" do
       buddy = create(:user)
       expect {
@@ -65,7 +65,7 @@ RSpec.describe "API::V1::Tags", type: :request do
     it "forbidden si no soy dueño del post/picture" do
       intruder = create(:user, password: "p4ssw0rd", password_confirmation: "p4ssw0rd")
 
-      delete "/users/sign_out"               # limpia cookie del actual (owner)
+      delete "/users/sign_out" # limpia cookie del actual (owner)
       intruder_headers = auth_headers_for(intruder, password: "p4ssw0rd")
       buddy = create(:user)
 
