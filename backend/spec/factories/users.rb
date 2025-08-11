@@ -3,6 +3,7 @@ FactoryBot.define do
   factory :user do
     association :country
     sequence(:email) { |n| "user#{n}@example.com" }
+    sequence(:handle) { |n| "@user#{n}" }
     password { "password123" }
     password_confirmation { password } # asegura que Devise pase la validación
     jti { SecureRandom.uuid }

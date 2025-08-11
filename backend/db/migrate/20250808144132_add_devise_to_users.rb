@@ -14,6 +14,8 @@ class AddDeviseToUsers < ActiveRecord::Migration[8.0]
       ## Rememberable
       t.datetime :remember_created_at
 
+      t.string :handle, null: false, default: ""
+
       ## Trackable
       # t.integer  :sign_in_count, default: 0, null: false
       # t.datetime :current_sign_in_at
@@ -37,7 +39,7 @@ class AddDeviseToUsers < ActiveRecord::Migration[8.0]
     end
 
     add_reference :users, :country, foreign_key: true, null: true
-
+    add_index  :users, :handle, unique: true
     add_index :users, :email,                unique: true
     add_index :users, :reset_password_token, unique: true
     # add_index :users, :confirmation_token,   unique: true

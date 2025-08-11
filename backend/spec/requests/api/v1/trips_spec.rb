@@ -1,13 +1,16 @@
+# spec/requests/api/v1/trips_spec.rb
 require "rails_helper"
 
 RSpec.describe "API::V1::Trips", type: :request do
-  let!(:user) { User.create!(email: "alice@example.com", password: "12345678") }
+  let!(:user)    { create(:user, password: "12345678", password_confirmation: "12345678") }
   let!(:headers) { auth_headers_for(user, password: "12345678") }
 
   describe "GET /api/v1/trips" do
     before do
-      create(:trip, user:, title: "Aventura en Perú")
-      create(:trip, user:, title: "Viaje a la Patagonia")
+      create(:trip, user: user, title: "Aventura en Perú")
+      create(:trip, user: user, title: "Viaje a la Patagonia")
+      # si quieres ruido de otros, no afectan el resultado:
+      create(:trip, user: create(:user), title: "No debería verse")
     end
 
     it "returns the user's trips" do
@@ -15,7 +18,7 @@ RSpec.describe "API::V1::Trips", type: :request do
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
       expect(json.length).to eq(2)
-      expect(json.first["title"]).to be_present
+      expect(json.map { |t| t["title"] }).to include("Aventura en Perú", "Viaje a la Patagonia")
     end
   end
 
@@ -33,7 +36,7 @@ RSpec.describe "API::V1::Trips", type: :request do
   end
 
   describe "GET /api/v1/trips/:id" do
-    let!(:trip) { Trip.create!(user:, title: "Solo mío") }
+    let!(:trip) { create(:trip, user: user, title: "Solo mío") }
 
     it "returns the trip details" do
       get "/api/v1/trips/#{trip.id}", headers: headers
@@ -42,7 +45,8 @@ RSpec.describe "API::V1::Trips", type: :request do
     end
 
     it "returns 404 for another user's trip" do
-      other_trip = Trip.create!(user: User.create!(email: "bob@example.com", password: "12345678"), title: "No tuyo")
+      other_user = create(:user)
+      other_trip = create(:trip, user: other_user, title: "No tuyo")
       get "/api/v1/trips/#{other_trip.id}", headers: headers
       expect(response).to have_http_status(:not_found)
     end

@@ -1,12 +1,16 @@
 FactoryBot.define do
   factory :country do
-    sequence(:iso2) { |n| Faker::Address.country_code }
-    sequence(:iso3) { |n| Faker::Address.country_code_long }
-    name_en { Faker::Address.country }
-    name_es { Faker::Address.country }
-    numeric_code { rand(100..999).to_s }
-    calling_code { "+#{rand(1..99)}" }
-    region { Faker::Address.state }
-    subregion { Faker::Address.city }
+    sequence(:name_en) { |n| "Country #{n}" }
+    sequence(:name_es) { |n| "País #{n}" }
+
+    sequence(:iso2) do |n|
+      letters = ('A'..'Z').to_a
+      letters[n % 26] + letters[(n / 26) % 26] # AA, BA, CA, ...
+    end
+    sequence(:iso3) do |n|
+      letters = ('A'..'Z').to_a
+      letters[n % 26] + letters[(n / 26) % 26] + letters[(n / 676) % 26]
+    end
+    sequence(:numeric_code) { |n| 100 + n }
   end
 end

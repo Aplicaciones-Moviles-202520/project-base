@@ -18,7 +18,9 @@ Rails.application.routes.draw do
           get :search
         end
       end
-      resources :pictures, only: %i[index show create update destroy]
+      resources :pictures, only: %i[index show create update destroy] do
+        resources :tags, only: [:index, :create, :destroy]
+      end
       resources :videos,   only: %i[index show create update destroy]
       resources :audios,   only: %i[index show create update destroy]      
     end
