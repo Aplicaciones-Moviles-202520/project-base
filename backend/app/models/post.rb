@@ -1,11 +1,10 @@
 class Post < ApplicationRecord
   belongs_to :user
-  belongs_to :trip
-  belongs_to :location
+  belongs_to :trip_location
+  has_one :trip, through: :trip_location
+  has_one :location, through: :trip_location
 
   has_many :pictures, dependent: :destroy
-  has_many :videos,   dependent: :destroy
-  has_many :audios,   dependent: :destroy
-
-  validates :body, length: { maximum: 5000 }, allow_blank: true
+  has_many :videos, dependent: :destroy
+  has_many :audios, dependent: :destroy
 end

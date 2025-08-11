@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_08_153134) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_11_134336) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -69,7 +69,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_153134) do
     t.integer "country_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "normalized_name"
     t.index ["country_id", "name"], name: "index_locations_on_country_id_and_name"
+    t.index ["country_id", "normalized_name"], name: "idx_locations_country_normname_unique", unique: true
     t.index ["country_id"], name: "index_locations_on_country_id"
     t.index ["name"], name: "index_locations_on_name"
   end
@@ -84,14 +86,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_153134) do
 
   create_table "posts", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.integer "trip_id", null: false
-    t.integer "location_id", null: false
+    t.integer "trip_location_id", null: false
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["location_id"], name: "index_posts_on_location_id"
-    t.index ["trip_id", "created_at"], name: "index_posts_on_trip_id_and_created_at"
-    t.index ["trip_id"], name: "index_posts_on_trip_id"
+    t.index ["trip_location_id", "created_at"], name: "index_posts_on_trip_location_id_and_created_at"
+    t.index ["trip_location_id"], name: "index_posts_on_trip_location_id"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
@@ -179,8 +179,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_153134) do
   add_foreign_key "audios", "posts"
   add_foreign_key "locations", "countries"
   add_foreign_key "pictures", "posts"
-  add_foreign_key "posts", "locations"
-  add_foreign_key "posts", "trips"
+  add_foreign_key "posts", "trip_locations"
   add_foreign_key "posts", "users"
   add_foreign_key "tags", "pictures"
   add_foreign_key "tags", "users"

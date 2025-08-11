@@ -54,11 +54,11 @@ gem "devise", "~> 4.9"
 gem "devise-jwt", "~> 0.12"
 gem "devise-jwt-cookie2", "~> 0.6.0" # fork actualizado
 
-group :development, :test do
-  gem "dotenv-rails"
-end
+gem "dotenv-rails"
 
 group :development, :test do
+  gem 'shoulda-matchers'
+  gem 'database_cleaner-active_record'  
   gem "rspec-rails", "~> 6.0"   # RSpec para Rails 8
 end
 
