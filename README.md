@@ -157,11 +157,11 @@ bundle exec rspec # verificar que los tests pasen
 rails s # iniciar la aplicación
 ```
 
-Las siguientes ejecuciones de la aplicación sólo requieren levantar el sevidor Puma con el comando `rails s`.
+Las siguientes ejecuciones de la aplicación sólo requieren levantar el servidor Puma con el comando `rails s`.
 
 **Iniciar la aplicación de frontend con Vite**
 
-Luego, para iniciar la aplicación React con Vite, se debe ir al directorio `www-frontend` en el repositorio y allí ejecutar:
+Luego, para iniciar la aplicación React con Vite, se debe ir al directorio `frontend` en el repositorio y allí ejecutar:
 
 ```sh
 npm install -g yarn

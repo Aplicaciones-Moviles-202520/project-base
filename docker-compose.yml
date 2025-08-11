@@ -8,8 +8,12 @@ services:
       args:
         RUBY_VERSION: 3.4.5
     volumes:
-      - ./backend:/app # Mapeo directo para desarrollo en caliente
-      - bundle_data:/usr/local/bundle
+      - ./backend/app:/app/app
+      - ./backend/config:/app/config
+      - ./backend/db:/app/db
+      - ./backend/lib:/app/lib
+      - ./backend/public:/app/public
+      - bundle:/usr/local/bundle
     ports:
       - "3001:3001" # Asegurar el mapeo correcto del puerto
     environment:
@@ -22,10 +26,10 @@ services:
 
   frontend:
     build:
-      context: ./www-frontend
+      context: ./frontend
       dockerfile: Dockerfile.dev 
     volumes:
-      - ./www-frontend:/app:cached
+      - ./frontend:/app:cached
       - /app/node_modules
     ports:
       - "3000:3000"
@@ -39,5 +43,5 @@ services:
       - "6379:6379"
 
 volumes:
-  bundle_data:
+  bundle:
   node_modules:
