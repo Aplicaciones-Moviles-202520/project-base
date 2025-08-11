@@ -2,7 +2,7 @@
 
 ## Objetivos
 
-El objetivo de esta entrega es documentar el diseño de la interfaz de usuario de la aplicación móvil y realizar algunas tareas iniciales de desarrollo, como completar algunos endpoints de API necesarios de acuerdo a los requisitos funcionales a considerar.
+El objetivo de esta entrega es documentar el diseño de la interfaz de usuario de la aplicación móvil, utilizando preferentemente la herramienta Figma.
 
 ## Diseño de Interfaz de Usuario
 
