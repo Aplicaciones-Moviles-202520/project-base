@@ -6,11 +6,11 @@ El objetivo de esta entrega es documentar el diseño de la interfaz de usuario d
 
 ## Diseño de Interfaz de Usuario
 
-Para los requisitos funcionales 1 a 6 del [enunciado general del proyecto](../../README.md) (verlos también aquí a continuación), se debe presentar un diseño de interfaz móvil de mediana fidelidad, es decir, mostrar todas las pantallas asemejándose a la interfaz real, pero sin implementar funcionalidad real, sino _sólo navegación básica mediante enlaces entre las distintas pantallas_.
+Para un conjunto de requisitos del [enunciado general del proyecto](../../README.md) (verlos a continuación), se debe presentar un diseño de interfaz móvil de mediana fidelidad, es decir, mostrar todas las pantallas asemejándose a la interfaz real, pero sin implementar funcionalidad real, sino _sólo navegación básica mediante enlaces entre las distintas pantallas_.
 
 El diseño de interfaz debe realizarse considerando que el toolkit de interfaz de usuario móvil preferido será Material UI de Google, en su versión 3, y la implementación a usar será la biblioteca MUI de componentes para React ([https://mui.com/material-ui/](https://mui.com/material-ui/)), versión 7.
 
-Para el diseño de la interfaz, usaremos Figma, con el kit [Material UI for Figma (and MUI X)](https://www.figma.com/community/file/912837788133317724/material-ui-for-figma-and-mui-x). También estará permitido usar Axure RP, sin embargo, para prototipar con MUI se requieren bibliotecas de componentes que generalmente son comerciales, y para las cuales no tenemos licencia en el curso.
+Para el diseño de la interfaz, usaremos Figma, con UI kits [Material 3 Design Kit](https://www.figma.com/community/file/1035203688168086460), y [Material UI for Figma (and MUI X)](https://www.figma.com/community/file/912837788133317724/material-ui-for-figma-and-mui-x). Para usar un mockup de un dispositivo móvi, es recomendable el uso del UI kit [Minimal Mockups](https://www.figma.com/design/3uoWgyChDi0RDQGsfTa7G6?fuid=1404551889925454225). También estará permitido usar Axure RP, sin embargo, para prototipar con MUI se requieren bibliotecas de componentes que generalmente son comerciales, y para las cuales no tenemos licencia en el curso.
 
 Como ya se ha visto en el laboratorio 1, es factible obtener una licencia de Figma educacional.
 
