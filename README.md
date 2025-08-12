@@ -221,12 +221,11 @@ docker-compose down --remove-orphans
 
 Es recomendable usar Postman para realizar pruebas de la API antes de implementar funcionalidad en el frontend. Para esto, considerar que:
 
-* Hay una pequeña colección públicamente compartida de llamadas a la API, para Postman, que ha creado el profesor del curso, disponible en [https://bit.ly/icc4203-202420-project-postman-collection](https://bit.ly/icc4203-202420-project-postman-collection).
-* Antes de llamar a las operaciones de la API, es necesario autenticarse con el sistema backend. Para esto se debe ejecutar la petición `POST http://localhost:3001/api/v1/signup` para crear una cuenta. Ver los detalles del usuario a crear en la pestaña "Body".
-* Luego es necesario obtener un token JWT llamando a `POST http://localhost:3001/api/v1/login`, con el usuario y la clave utilizada en la petición anterior.
-* Ver el token JWT en la respuesta de la llamada anterior. Copiarlo.
-* Luego, es posible llamar a cualquier operación de la API usando el token JWT. Por ejemplo, ir a `POST http://localhost:3001/api/v1/trips`, y con esa solicitud crear un nuevo viaje. Es necesario agregar un header (ir a pestaña Headers), con key "Authorization", y con el token JWT en valor (value). Se tiene que leer en value "Bearer [token JWT]".
-* Es responsabilidad del cliente eliminar el token JWT cuando se deja de usar. Los tokens tienen vigencia de 24 hrs. una vez creados. Esto se ajusta en `backend/config/initializers/devise.rb` en `jwt.expiration_time`.
+* Hay una pequeña colección públicamente compartida de llamadas a la API, para Postman, [disponible aquí](https://www.postman.com/speeding-flare-816215/workspace/icc4203-202520/collection/6538290-d2471a0e-5a1f-4499-91b1-4f78f358b97d?action=share&creator=6538290).
+* Antes de llamar a las operaciones de la API, es necesario autenticarse con el sistema backend. Para esto se debe ejecutar la petición `POST http://localhost:3001/users/signup` para crear una cuenta, o bien, puede usarse la cuenta con usuario `traveller@miuandes.cl` y contraseña `123123123`, la cual está definida en `seeds.rb` en el backend. Si se opta por crear un usuario, su objeto de creación debe especificarse en la pestaña "Body" de la petición.
+* Luego es necesario autenticar llamando a `POST http://localhost:3001/users/sign_in`, con el usuario y la clave utilizada en la petición anterior.
+* Las cookies deben estar activas en postman, de modo que el token JWT pueda quedar disponible para las siguientes peticiones.
+* Una vez autenticado, sería posible ejecutar `POST http://localhost:3001/api/v1/trips`, y con esa solicitud crear un nuevo viaje. Si el token JWT expira (tiene duración de 24 horas), debe volver a realizarse el paso inicial de autenticar al usuario.
 
 ## Uso del repositorio
 
