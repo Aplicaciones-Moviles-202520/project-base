@@ -32,6 +32,7 @@ jobs:
       - name: Build & Restart containers
         env:
           COMPOSE_PROJECT_NAME: 4203-${{ vars.GRUPO }}
+          VITE_API_BASE_URL: https://grupo${{ vars.GRUPO }}.4203.iccuandes.org
         run: |
           if [ "${{ inputs.RESET_VOLUMES }}" = "true" ]; then
             docker compose -f docker-compose.production.yml down -v --remove-orphans
@@ -39,7 +40,9 @@ jobs:
             docker compose -f docker-compose.production.yml down --remove-orphans
           fi
 
-          docker compose -f docker-compose.production.yml build
+          docker compose -f docker-compose.production.yml build \
+            --build-arg VITE_API_BASE_URL=$VITE_API_BASE_URL
           docker compose -f docker-compose.production.yml up -d
+
 
 
