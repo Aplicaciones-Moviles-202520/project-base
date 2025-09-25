@@ -47,12 +47,13 @@ jobs:
         env:
           COMPOSE_PROJECT_NAME: 4203-${{ vars.GRUPO }}
         run: |
+          set -x
           if [ "${{ inputs.RESET_VOLUMES }}" = "true" ]; then
             echo "🔄 Reset de volúmenes → db:setup"
-            docker compose -f docker-compose.production.yml run --rm api ./bin/rails db:setup
+            RAILS_ENV=production docker compose -f docker-compose.production.yml run --rm --no-deps api ./bin/rails db:setup
           else
             echo "⚙️ Migraciones → db:prepare"
-            docker compose -f docker-compose.production.yml run --rm api ./bin/rails db:prepare
+            RAILS_ENV=production docker compose -f docker-compose.production.yml run --rm --no-deps api ./bin/rails db:prepare
           fi
 
       - name: Start containers
