@@ -1,0 +1,50 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      rails_port:
+        description: "Puerto para Rails API"
+        required: true
+        default: "3000"
+      reset_volumes:
+        description: "Resetear volúmenes (borra BD/archivos)"
+        required: true
+        default: "false"
+        type: boolean
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set environment
+        run: |
+          echo "RAILS_ENV=production" > .env
+          echo "PORT=${{ vars.RAILS_PORT }}" >> .env
+          echo "FRONTEND_ORIGIN=https://${{ vars.DOMAIN }}" >> .env
+          echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> .env
+          echo "DEVISE_JWT_SECRET_KEY=${{ secrets.DEVISE_JWT_SECRET_KEY }}" >> .env
+      - name: Build & Deploy containers
+        env:
+          COMPOSE_PROJECT_NAME: 4203-${{ vars.GRUPO }}
+          VITE_API_BASE_URL: https://grupo${{ vars.GRUPO }}.4203.iccuandes.org
+        run: |
+          if [ "${{ inputs.RESET_VOLUMES }}" = "true" ]; then
+            echo "🔄 Reset de volúmenes → docker compose down -v"
+            docker compose -f docker-compose.production.yml down -v --remove-orphans
+          else
+            echo "🧹 Limpieza normal → docker compose down"
+            docker compose -f docker-compose.production.yml down --remove-orphans
+          fi
+
+          echo "🛠️ Build con VITE_API_BASE_URL=$VITE_API_BASE_URL"
+          docker compose -f docker-compose.production.yml build \
+            --build-arg VITE_API_BASE_URL=$VITE_API_BASE_URL
+
+          echo "🚀 Levantando servicios"
+          docker compose -f docker-compose.production.yml up -d

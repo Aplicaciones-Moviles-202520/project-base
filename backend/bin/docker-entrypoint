@@ -1,14 +1,16 @@
-#!/bin/bash -e
+#!/bin/bash
+set -e
 
-# Enable jemalloc for reduced memory usage and latency.
-if [ -z "${LD_PRELOAD+x}" ]; then
-    LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)
-    export LD_PRELOAD
+# Solo en producción queremos preparar/sembrar la base de datos
+if [ "$RAILS_ENV" = "production" ]; then
+  if [ "$RESET_VOLUMES" = "true" ]; then
+    echo "🔄 RESET_VOLUMES=true → ejecutando db:setup (create + migrate + seed)"
+    bundle exec rails db:setup
+  else
+    echo "⚙️ RESET_VOLUMES!=true → ejecutando db:prepare"
+    bundle exec rails db:prepare
+  fi
 fi
 
-# If running the rails server then create or migrate existing database
-if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
-  ./bin/rails db:prepare
-fi
-
-exec "${@}"
+# Luego ejecuta el CMD normal (ej. Puma)
+exec "$@"

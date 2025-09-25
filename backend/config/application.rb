@@ -23,7 +23,6 @@ module Backend
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
-
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
@@ -31,6 +30,16 @@ module Backend
 
     # Enable cookies & sessions in API mode
     config.middleware.use ActionDispatch::Cookies
-    # config.middleware.use ActionDispatch::Session::CookieStore
+    # config.middleware.use ActionDispatch::Session::CookieStore 
+
+    # Habilitar servir archivos estáticos desde /public en producción
+    if Rails.env.production?
+      config.middleware.insert_before(
+        0,
+        Rack::Static,
+        urls: ["/assets"],
+        root: Rails.root.join("public")
+      )
+    end
   end
 end
