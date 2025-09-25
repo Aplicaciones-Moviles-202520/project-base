@@ -43,6 +43,14 @@ jobs:
           docker compose -f docker-compose.production.yml build \
             --build-arg VITE_API_BASE_URL=$VITE_API_BASE_URL
           docker compose -f docker-compose.production.yml up -d
-
+      - name: Run migrations
+        run: |
+          if [ "${{ inputs.RESET_VOLUMES }}" = "true" ]; then
+            echo "🔄 Reset de volúmenes detectado → corriendo db:setup (create + migrate + seed)"
+            docker compose -f docker-compose.production.yml exec -T api ./bin/rails db:setup
+          else
+            echo "⚙️ Migraciones normales → corriendo db:prepare"
+            docker compose -f docker-compose.production.yml exec -T api ./bin/rails db:prepare
+          fi
 
 
