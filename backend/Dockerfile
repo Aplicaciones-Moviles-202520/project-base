@@ -79,4 +79,5 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Puerto documentado (default 3000, pero configurable vía $PORT en runtime)
 EXPOSE 3000
-CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "${PORT:-3000}"]
+
+CMD ["sh", "-c", "./bin/rails server -b 0.0.0.0 -p ${PORT:-3000}"]
