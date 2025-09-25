@@ -47,12 +47,17 @@ RUN bundle exec bootsnap precompile app/ lib/
 FROM node:22-bookworm AS vite
 WORKDIR /frontend
 
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 COPY frontend/package*.json ./
 RUN npm ci
 
 COPY frontend ./
 RUN npm install @rollup/rollup-linux-x64-gnu --no-save
-RUN npm run build
+
+# Fuerza recompilación con la URL de API
+RUN echo "API BASE: $VITE_API_BASE_URL" && npm run build
       
 ##########################
 # ------ Final -----------
