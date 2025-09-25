@@ -7,7 +7,7 @@
 ARG RUBY_VERSION=3.4.5
 FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
-WORKDIR /rails
+WORKDIR /app
 
 # Paquetes mínimos de runtime
 RUN apt-get update -qq && \
@@ -67,14 +67,14 @@ FROM base
 ARG VITE_API_BASE_URL
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
-WORKDIR /rails
+WORKDIR /app
 
 # Copia gems y app Rails
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
-COPY --from=build /rails /rails
+COPY --from=build /app /app
 
 # Copia build de Vite al public/ de Rails
-COPY --from=vite /frontend/dist /rails/public
+COPY --from=vite /frontend/dist /app/public
 
 # Crear usuario no-root y asignar permisos
 RUN groupadd --system --gid 1000 rails && \
@@ -83,7 +83,7 @@ RUN groupadd --system --gid 1000 rails && \
 USER 1000:1000
 
 # Entrypoint Rails
-ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+ENTRYPOINT ["/app/bin/docker-entrypoint"]
 
 # Puerto documentado (default 3000, pero configurable vía $PORT en runtime)
 EXPOSE 3000
