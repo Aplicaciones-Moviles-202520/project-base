@@ -64,6 +64,9 @@ RUN echo "API BASE: $VITE_API_BASE_URL" && npm run build
 ##########################
 FROM base
 
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 WORKDIR /rails
 
 # Copia gems y app Rails

@@ -46,6 +46,7 @@ jobs:
       - name: Run migrations
         env:
           COMPOSE_PROJECT_NAME: 4203-${{ vars.GRUPO }}
+          VITE_API_BASE_URL: https://grupo${{ vars.GRUPO }}.4203.iccuandes.org
         run: |
           set -x
           if [ "${{ inputs.RESET_VOLUMES }}" = "true" ]; then
