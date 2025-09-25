@@ -1,0 +1,45 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      rails_port:
+        description: "Puerto para Rails API"
+        required: true
+        default: "3000"
+      reset_volumes:
+        description: "Resetear volúmenes (borra BD/archivos)"
+        required: true
+        default: "false"
+        type: boolean
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set environment
+        run: |
+          echo "RAILS_ENV=production" > .env.production
+          echo "PORT=${{ inputs.RAILS_PORT }}" >> .env.production
+          echo "FRONTEND_ORIGIN=https://${{ secrets.DOMAIN }}" >> .env.production
+          echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> .env.production
+          echo "DEVISE_JWT_SECRET_KEY=${{ secrets.DEVISE_JWT_SECRET_KEY }}" >> .env.production
+
+      - name: Build & Restart containers
+        env:
+          COMPOSE_PROJECT_NAME: 4203-${{ vars.GRUPO }}
+        run: |
+          if [ "${{ inputs.reset_volumes }}" = "true" ]; then
+            docker compose down -v --remove-orphans
+          else
+            docker compose down --remove-orphans
+          fi
+
+          docker compose build
+          docker compose up -d
