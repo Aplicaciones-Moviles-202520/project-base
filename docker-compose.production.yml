@@ -9,7 +9,7 @@ services:
     env_file:
       - .env.production
     environment:
-      PORT: ${PORT}    # PORT viene escrito en .env.production desde el workflow
+      PORT: ${RAILS_PORT}
     volumes:
       - sqlite_data:/app/db
       - storage_data:/app/storage
