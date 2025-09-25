@@ -47,7 +47,9 @@ RUN bundle exec bootsnap precompile app/ lib/
 FROM node:22-bookworm AS vite
 WORKDIR /frontend
 COPY frontend/package*.json ./
-RUN npm ci             
+RUN npm ci \
+ && npm install @rollup/rollup-linux-x64-gnu --no-save \
+ && npm run build            
 COPY frontend ./
 RUN npm run build      
 
