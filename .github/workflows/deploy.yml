@@ -26,8 +26,8 @@ jobs:
       - name: Set environment
         run: |
           echo "RAILS_ENV=production" > .env.production
-          echo "PORT=${{ inputs.RAILS_PORT }}" >> .env.production
-          echo "FRONTEND_ORIGIN=https://${{ secrets.DOMAIN }}" >> .env.production
+          echo "PORT=${{ vars.RAILS_PORT }}" >> .env.production
+          echo "FRONTEND_ORIGIN=https://${{ vars.DOMAIN }}" >> .env.production
           echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> .env.production
           echo "DEVISE_JWT_SECRET_KEY=${{ secrets.DEVISE_JWT_SECRET_KEY }}" >> .env.production
 
