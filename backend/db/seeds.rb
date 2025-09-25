@@ -27,4 +27,32 @@ CSV.foreach(path, headers: true) do |row|
   )
 end
 
-User.create!(email: "traveller@miuandes.cl", password: "123123123", password_confirmation: "123123123", jti: SecureRandom.uuid)
+user = User.first || User.create!(email: "traveller@miuandes.cl", password: "123123123", password_confirmation: "123123123", jti: SecureRandom.uuid)
+
+# Encuentra o crea un país de prueba
+country = Country.first || Country.create!(name: "Chile", code: "CL")
+
+# Encuentra o crea una localización
+location = Location.first || Location.create!(
+  name: "Santiago",
+  country: country
+)
+
+# Encuentra o crea un trip de prueba
+trip = Trip.first || Trip.create!(
+  user: user,
+  title: "Viaje demo"
+)
+
+# Une trip con location
+trip_location = TripLocation.first || TripLocation.create!(
+  trip: trip,
+  position: 1,
+  location: location
+)
+
+# Crea un post asociado
+post = Post.first || Post.create!(
+  user: user,
+  trip_location: trip_location
+)
