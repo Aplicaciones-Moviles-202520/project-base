@@ -32,9 +32,10 @@ jobs:
           echo "DEVISE_JWT_SECRET_KEY=${{ secrets.DEVISE_JWT_SECRET_KEY }}" >> .env.production
 
       - name: Build & Restart containers
+        env:
+          COMPOSE_PROJECT_NAME: 4203-${{ vars.GRUPO }}
         run: |
           if [ "${{ inputs.RESET_VOLUMES }}" = "true" ]; then
-            echo "[deploy] Resetando volúmenes..."
             docker compose down -v --remove-orphans
           else
             docker compose down --remove-orphans
@@ -42,3 +43,4 @@ jobs:
 
           docker compose build
           docker compose up -d
+
