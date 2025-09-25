@@ -46,13 +46,14 @@ RUN bundle exec bootsnap precompile app/ lib/
 ##########################
 FROM node:22-bookworm AS vite
 WORKDIR /frontend
-COPY frontend/package*.json ./
-RUN npm ci \
- && npm install @rollup/rollup-linux-x64-gnu --no-save \
- && npm run build            
-COPY frontend ./
-RUN npm run build      
 
+COPY frontend/package*.json ./
+RUN npm ci
+
+COPY frontend ./      # aquí copias index.html y src/
+RUN npm install @rollup/rollup-linux-x64-gnu --no-save
+RUN npm run build     # ahora sí encuentra index.html
+      
 ##########################
 # ------ Final -----------
 ##########################
