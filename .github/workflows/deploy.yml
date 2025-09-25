@@ -36,11 +36,12 @@ jobs:
           COMPOSE_PROJECT_NAME: 4203-${{ vars.GRUPO }}
         run: |
           if [ "${{ inputs.RESET_VOLUMES }}" = "true" ]; then
-            docker compose down -v --remove-orphans
+            docker compose -f docker-compose.production.yml down -v --remove-orphans
           else
-            docker compose down --remove-orphans
+            docker compose -f docker-compose.production.yml down --remove-orphans
           fi
 
-          docker compose build
-          docker compose up -d
+          docker compose -f docker-compose.production.yml build
+          docker compose -f docker-compose.production.yml up -d
+
 
