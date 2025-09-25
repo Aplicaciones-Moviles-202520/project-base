@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { signIn, signOut } from '../lib/api';
 
-export default function LoginForm() {
+export default function LoginForm({ onSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -16,13 +16,15 @@ export default function LoginForm() {
     setError(null);
 
     try {
-      // Evita el caso “cookie prevalece”: limpia sesión antes de reintentar login
-      await signOut().catch(() => {}); // ignoramos error si no había sesión
+      await signOut().catch(() => {});
       await signIn({ email, password });
-      setMsg('login exitoso');
+      setMsg("login exitoso");
+
+      // 🔑 Redirige al callback que define App.jsx
+      if (onSuccess) onSuccess();
     } catch (err) {
-      setMsg('login error');
-      setError(err.message || 'Error de autenticación');
+      setMsg("login error");
+      setError(err.message || "Error de autenticación");
     } finally {
       setSubmitting(false);
     }

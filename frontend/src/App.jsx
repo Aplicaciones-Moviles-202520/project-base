@@ -1,17 +1,27 @@
-import LoginForm from './components/LoginForm';
+// src/App.jsx
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import LoginForm from "./components/LoginForm";
+import PicturesManager from "./components/PicturesManager";
 
-function App() {
+function LoginPage() {
+  const navigate = useNavigate();
+
   const handleLoginSuccess = () => {
-    // Here you could fetch /bootstrap data if you had an endpoint,
-    // or navigate to a protected route later. For now, nothing else needed.
+    // Redirige a /pictures después de login exitoso
+    navigate("/pictures");
   };
 
-  return (
-    <>
-      <h1>TravelLog</h1>
-      <LoginForm onSuccess={handleLoginSuccess} />
-    </>
-  );
+  return <LoginForm onSuccess={handleLoginSuccess} />;
 }
 
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <h1>TravelLog</h1>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/pictures" element={<PicturesManager />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
