@@ -50,9 +50,9 @@ WORKDIR /frontend
 COPY frontend/package*.json ./
 RUN npm ci
 
-COPY frontend ./      # aquí copias index.html y src/
+COPY frontend ./
 RUN npm install @rollup/rollup-linux-x64-gnu --no-save
-RUN npm run build     # ahora sí encuentra index.html
+RUN npm run build
       
 ##########################
 # ------ Final -----------
