@@ -1,7 +1,9 @@
 # syntax=docker/dockerfile:1
 # check=error=true
 
-# ----------- Base stage -----------
+##########################
+# -------- Base ----------
+##########################
 ARG RUBY_VERSION=3.4.5
 FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
@@ -17,42 +19,50 @@ ENV RAILS_ENV="production" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development"
 
-# ----------- Build stage -----------
+##########################
+# -------- Build ---------
+##########################
 FROM base AS build
 
-# Paquetes para compilar gems
+# Paquetes para compilar gems y Node (usado en gems tipo jsbundling/cssbundling)
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential git libyaml-dev pkg-config nodejs npm && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Instala gems
-COPY Gemfile Gemfile.lock ./
+# Instala gems (usa los del backend)
+COPY backend/Gemfile backend/Gemfile.lock ./
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
 # Copia código Rails
-COPY . .
+COPY backend ./
 
 # Precompila bootsnap (sin assets, porque es API)
 RUN bundle exec bootsnap precompile app/ lib/
 
-# ----------- Vite stage (frontend build) -----------
+##########################
+# ----- Vite stage -------
+##########################
 FROM node:22-bookworm AS vite
 WORKDIR /frontend
 COPY frontend/package*.json ./
 RUN npm ci --omit=dev
 COPY frontend ./
-RUN npm run build   # genera dist/
+RUN npm run build   # genera /frontend/dist
 
-# ----------- Final stage -----------
+##########################
+# ------ Final -----------
+##########################
 FROM base
 
-# Copia gems y app
+WORKDIR /rails
+
+# Copia gems y app Rails
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
 
-# Copia el build de Vite al public/ de Rails
+# Copia build de Vite al public/ de Rails
 COPY --from=vite /frontend/dist /rails/public
 
 # Crear usuario no-root y asignar permisos
@@ -64,8 +74,6 @@ USER 1000:1000
 # Entrypoint Rails
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
-# Puerto documentado (default 3000, pero configurable vía $PORT)
+# Puerto documentado (default 3000, pero configurable vía $PORT en runtime)
 EXPOSE 3000
-
-# Arranque del servidor: se respeta $PORT en runtime
 CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "${PORT:-3000}"]
