@@ -29,35 +29,22 @@ jobs:
           echo "FRONTEND_ORIGIN=https://${{ vars.DOMAIN }}" >> .env
           echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> .env
           echo "DEVISE_JWT_SECRET_KEY=${{ secrets.DEVISE_JWT_SECRET_KEY }}" >> .env
-      - name: Build containers
+      - name: Build & Deploy containers
         env:
           COMPOSE_PROJECT_NAME: 4203-${{ vars.GRUPO }}
           VITE_API_BASE_URL: https://grupo${{ vars.GRUPO }}.4203.iccuandes.org
         run: |
           if [ "${{ inputs.RESET_VOLUMES }}" = "true" ]; then
+            echo "🔄 Reset de volúmenes → docker compose down -v"
             docker compose -f docker-compose.production.yml down -v --remove-orphans
           else
+            echo "🧹 Limpieza normal → docker compose down"
             docker compose -f docker-compose.production.yml down --remove-orphans
           fi
 
+          echo "🛠️ Build con VITE_API_BASE_URL=$VITE_API_BASE_URL"
           docker compose -f docker-compose.production.yml build \
             --build-arg VITE_API_BASE_URL=$VITE_API_BASE_URL
 
-      - name: Run migrations
-        env:
-          COMPOSE_PROJECT_NAME: 4203-${{ vars.GRUPO }}
-          VITE_API_BASE_URL: https://grupo${{ vars.GRUPO }}.4203.iccuandes.org
-        run: |
-          set -x
-          if [ "${{ inputs.RESET_VOLUMES }}" = "true" ]; then
-            echo "🔄 Reset de volúmenes → db:setup"
-            RAILS_ENV=production docker compose -f docker-compose.production.yml run --rm --no-deps api ./bin/rails db:setup
-          else
-            echo "⚙️ Migraciones → db:prepare"
-            RAILS_ENV=production docker compose -f docker-compose.production.yml run --rm --no-deps api ./bin/rails db:prepare
-          fi
-
-      - name: Start containers
-        env:
-          COMPOSE_PROJECT_NAME: 4203-${{ vars.GRUPO }}
-        run: docker compose -f docker-compose.production.yml up -d
+          echo "🚀 Levantando servicios"
+          docker compose -f docker-compose.production.yml up -d
