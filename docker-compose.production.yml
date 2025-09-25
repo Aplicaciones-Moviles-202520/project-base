@@ -8,6 +8,7 @@ services:
       - .env
     environment:
       PORT: ${PORT}
+      RAILS_SERVE_STATIC_FILES: true
     volumes:
       - sqlite_data:/app/db
       - storage_data:/app/storage
