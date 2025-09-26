@@ -8,9 +8,9 @@ En esta entrega el foco está en completar la funcionalidad de la aplicación Tr
 
 Para esta entrega se requiere implementar la siguiente funcionalidad. Notar que al igual que en los enunciados anteriores, los números de las funcionalidades son en referencia al enunciado general del proyecto.
 
-6. [1.5] Los usuarios pueden ver la cronología de publicaciones de un viaje, ordenadas por fecha y agrupadas por ubicación visitada.
-9. [1.5] Los usuarios pueden etiquetar (`Tag`) a sus *travel buddies* en las imágenes y vídeos de sus publicaciones.
-12. [1.5] Los usuarios pueden acceder al perfil de otros usuarios, visualizar sus viajes públicos y sus publicaciones compartidas.
+R6. [1.5] Los usuarios pueden ver la cronología de publicaciones de un viaje, ordenadas por fecha y agrupadas por ubicación visitada.
+R9. [1.5] Los usuarios pueden etiquetar (`Tag`) a sus *travel buddies* en las imágenes y vídeos de sus publicaciones.
+R12. [1.5] Los usuarios pueden acceder al perfil de otros usuarios, visualizar sus viajes públicos y sus publicaciones compartidas.
 
 Aparte de las tres funcionalidades anteriores, en esta entrega final se requiere el despliegue en producción de la aplicación [1.5].
 
