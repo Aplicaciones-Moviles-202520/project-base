@@ -51,12 +51,12 @@ Para lograr una experiencia altamente usable en dispositivos móviles con React 
    - Se puede implementar **carga floja/infinite scroll** con [`IntersectionObserver`](https://www.npmjs.com/package/react-intersection-observer). Dejamos esto como un desafío para quiénes tengan interés en implementar una vista con carga óptima, no es una obligación.
    - Si se usa carga floja, mostrar placeholders con [`Skeleton`](https://mui.com/material-ui/api/skeleton/) de MUI durante la carga.
    - Optimizar imágenes (miniaturas adaptadas a pantallas móviles).
+  
+---
 
 **Requisito 9**
 
 En consideración de la usabilidad en dispositivos móviles, damos recomendaciones respecto a la implementación de este requisito:
-
-### Consejos para implementar el etiquetado de *travel buddies* en imágenes y vídeos
 
 1. **Selección de usuarios a etiquetar**
    - Usar un campo de autocompletado (`Autocomplete` de MUI) para buscar y seleccionar amigos (*travel buddies*).  
@@ -80,9 +80,13 @@ En consideración de la usabilidad en dispositivos móviles, damos recomendacion
    - Incluir feedback inmediato: cuando se agrega un tag, debe aparecer de forma visible en la imagen y en la lista de etiquetados.  
    - Usar colores contrastantes para que los marcadores sean distinguibles tanto en modo claro como en modo oscuro.
 
+---
+
 **Requisito 12**
 
 Para este requisito es importante mantener la consistencia de la interfaz, y utilizar componentes de MUI apropiados como los que se proponen en las recomendaciones para los requisitos anteriores.
+
+---
 
 **Despliegue en Producción**
 
