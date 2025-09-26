@@ -12,7 +12,7 @@ Para esta entrega se requiere implementar la siguiente funcionalidad. Notar que 
 9. [1.5] Los usuarios pueden etiquetar (`Tag`) a sus *travel buddies* en las imágenes y vídeos de sus publicaciones.
 12. [1.5] Los usuarios pueden acceder al perfil de otros usuarios, visualizar sus viajes públicos y sus publicaciones compartidas.
 
-Aparte de las tres funcionalidades anteriores, en esta entrega final se requiere el despliegue en producción de la aplicación (1.5).
+Aparte de las tres funcionalidades anteriores, en esta entrega final se requiere el despliegue en producción de la aplicación [1.5].
 
 ## Implementación de la Funcionalidad
 
