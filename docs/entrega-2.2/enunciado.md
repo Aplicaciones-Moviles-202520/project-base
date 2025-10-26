@@ -248,9 +248,11 @@ Usted debe actualizar la plantilla de CloudFormation proporcionada para incluir 
 
 Se debe incluir en el repositorio un documento en formato Markdown que analice y proponga una solución, a elección del grupo, para **una** de las siguientes problemáticas relacionadas con el sistema implementado:
 
-1. ¿Cómo gestionar cuando el backend-server solicita una URL para ingresar una imagen, pero el backend-server no la sube?
-2. Un usuario sube una foto, se analiza, pero luego la elimina ya que la vuelve a subir en otro post. ¿Cómo optimizar el sistema para evitar análisis repetidos de la misma imagen?
+1. El backend-server solicita una URL para ingresar una imagen, pero luego no la sube
+2. Un usuario sube una foto, pero luego la elimina para subirla nuevamente en otro post
 3. Un usuario sube la misma foto en dos posts diferentes
+4. Dos fotografías diferentes tienen el mismo hash SHA-256
+5. El back-end server calcula mal el hash de la imagen
 
 El análisis debe considerar:
 
