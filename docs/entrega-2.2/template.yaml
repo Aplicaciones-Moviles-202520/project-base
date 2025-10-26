@@ -1,0 +1,536 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+
+  SignedURLWriteExpiration:
+    Type: Number
+    Default: 60
+    Description: 'Expiration time (in seconds) for signed URLs to upload images to S3 (receiver).'
+
+  SignedURLReadExpiration:
+    Type: Number
+    Default: 30
+    Description: 'Expiration time (in seconds) for signed URLs to read images from S3 (obtain).'
+  
+  MinConfidence:
+    Type: Number
+    Default: 75.0
+    Description: 'Minimum confidence to persist labels to DynamoDB (analyzer).'
+
+  CensoredKeyword:
+    Type: String
+    Default: 'cat'
+    Description: 'Optional: label name for bonus status logic (not implemented in stub).'
+
+  CensoredKeywordThreshold:
+    Type: Number
+    Default: 90.0
+    Description: 'Optional: confidence >= this marks rejected (not implemented in stub).'
+
+  CensoredKeywordReview:
+    Type: Number
+    Default: 50.0
+    Description: 'Optional: confidence > this and < rejected marks under_review (not implemented in stub).'
+
+  JWTSecretKey:
+    Type: String
+    NoEcho: true
+    Default: 'change-me-jwt-secret'
+    Description: 'JWT secret key for token validation (same as backend-server).'
+
+  AllowedOrigins:
+    Type: CommaDelimitedList
+    Default: 'https://www.uandes.cl'
+    Description: 'Comma-separated list of allowed origins for CORS. Use "*" for all origins or specify specific domains like "https://example.com,https://app.example.com"'
+
+Resources:
+  #################################################################################
+  # Data resources ################################################################
+  #################################################################################
+
+  # Buckets #######################################################################
+
+  # Bucket to store images
+  ImagesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      NotificationConfiguration:
+        QueueConfigurations:
+          - Event: "s3:ObjectCreated:*"
+            Queue: !GetAtt ImageProcessingQueue.Arn
+
+  # Tables #######################################################################
+
+  # DynamoDB Table to store image analysis results
+  ImagesRegistryTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: image_id
+          AttributeType: S
+        - AttributeName: user_id
+          AttributeType: N
+        - AttributeName: post_id
+          AttributeType: N
+        - AttributeName: trip_id
+          AttributeType: N
+        - AttributeName: location_id
+          AttributeType: N
+      KeySchema:
+        - AttributeName: image_id
+          KeyType: HASH
+        - AttributeName: user_id
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: UserIdIndex
+          KeySchema:
+            - AttributeName: user_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: PostIdIndex
+          KeySchema:
+            - AttributeName: post_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: TripIdIndex
+          KeySchema:
+            - AttributeName: trip_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: LocationIdIndex
+          KeySchema:
+            - AttributeName: location_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  #################################################################################
+  # Image analysis flow ###########################################################
+  #################################################################################
+
+  # SQS Queue
+  ImageProcessingQueue:
+    Type: AWS::SQS::Queue
+
+  # SQS Queue Policy to allow S3 to send messages to the queue
+  ImageProcessingQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref ImageProcessingQueue
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: s3.amazonaws.com
+            Action: sqs:SendMessage
+            Resource: !GetAtt ImageProcessingQueue.Arn
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+
+  # SQS Event Source Mapping for Lambda
+  AnalyzerEventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !GetAtt ImageProcessingQueue.Arn
+      FunctionName: !Ref ImageAnalyzerFunction
+      Enabled: true
+      BatchSize: 1
+      ScalingConfig:
+        MaximumConcurrency: 2
+
+  # Image Analyzer Function
+  ImageAnalyzerFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: AnalyzerReadS3
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                Resource: !Sub '${ImagesBucket.Arn}/*'
+        - PolicyName: AnalyzerWriteDDB
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:Query
+                Resource: 
+                  - !GetAtt ImagesRegistryTable.Arn
+        - PolicyName: AnalyzerSQSAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sqs:ReceiveMessage
+                  - sqs:DeleteMessage
+                  - sqs:GetQueueAttributes
+                Resource: !GetAtt ImageProcessingQueue.Arn
+        - PolicyName: AnalyzerRekognition
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - rekognition:DetectLabels
+                Resource: '*'
+
+  ImageAnalyzerFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.13
+      Handler: index.lambda_handler
+      Role: !GetAtt ImageAnalyzerFunctionRole.Arn
+      Environment:
+        Variables:
+          IMAGES_BUCKET_NAME: !Ref ImagesBucket
+          IMAGES_TABLE_NAME: !Ref ImagesRegistryTable
+          MIN_CONFIDENCE: !Ref MinConfidence
+          CENSORED_LABEL: !Ref CensoredKeyword
+          CENSORED_REJECTED_THRESHOLD: !Ref CensoredKeywordThreshold
+          CENSORED_UNDER_REVIEW_THRESHOLD: !Ref CensoredKeywordReview
+      Code:
+        ZipFile: |
+          import json
+
+          def lambda_handler(event, context):
+            # TODO implement
+            return {
+              'statusCode': 200,
+              'body': json.dumps('Hello from Lambda!')
+            }
+
+  #################################################################################
+  # API ###########################################################################
+  #################################################################################
+
+  # API Gateway ###################################################################
+
+  # HTTP API Gateway
+  ApiGateway:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: ImageProcessingAPI
+      Description: HTTP API for image processing service
+      ProtocolType: HTTP
+      CorsConfiguration:
+        AllowCredentials: true
+        AllowHeaders:
+          - "*"
+        AllowMethods:
+          - "*"
+        AllowOrigins: !Ref AllowedOrigins
+
+  # HTTP API Stage
+  ApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref ApiGateway
+      StageName: prod
+      AutoDeploy: true
+
+  # JWT Authorizer for HTTP API
+  ApiAuthorizer:
+    Type: AWS::ApiGatewayV2::Authorizer
+    Properties:
+      Name: TokenAuthorizer
+      ApiId: !Ref ApiGateway
+      AuthorizerType: REQUEST
+      AuthorizerUri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AuthorizerFunction.Arn}/invocations'
+      AuthorizerResultTtlInSeconds: 300
+      IdentitySource:
+        - $request.header.Authorization
+      AuthorizerPayloadFormatVersion: "2.0"
+
+  AuthorizerInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref AuthorizerFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*'
+
+  AuthorizerFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  AuthorizerFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.13
+      Handler: index.lambda_handler
+      Role: !GetAtt AuthorizerFunctionRole.Arn
+      Environment:
+        Variables:
+          JWT_SECRET_KEY: !Ref JWTSecretKey
+      Code:
+        ZipFile: |
+          import json
+
+          def lambda_handler(event, context):
+            # TODO implement
+            return {
+              'statusCode': 200,
+              'body': json.dumps('Hello from Lambda!')
+            }
+
+  # Routes and integrations #######################################################
+
+  # Receiver Route
+  ReceiverRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ApiGateway
+      RouteKey: POST /receiver
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref ApiAuthorizer
+      Target: !Sub 'integrations/${ReceiverIntegration}'
+  
+  ReceiverIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref ApiGateway
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ImageReceiverFunction.Arn}/invocations'
+      PayloadFormatVersion: "2.0"
+  
+  ReceiverPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ImageReceiverFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*'
+  
+  ReceiverFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: ReceiverS3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                Resource: !Sub '${ImagesBucket.Arn}/*'
+        - PolicyName: ReceiverDDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                Resource: !GetAtt ImagesRegistryTable.Arn
+  
+  ImageReceiverFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.13
+      Handler: index.lambda_handler
+      Role: !GetAtt ReceiverFunctionRole.Arn
+      Environment:
+        Variables:
+          IMAGES_BUCKET_NAME: !Ref ImagesBucket
+          IMAGES_TABLE_NAME: !Ref ImagesRegistryTable
+          SIGNED_URL_WRITE_EXPIRATION: !Ref SignedURLWriteExpiration
+      Code:
+        ZipFile: |
+          import json
+
+          def lambda_handler(event, context):
+            # TODO implement
+            return {
+              'statusCode': 200,
+              'body': json.dumps('Hello from Lambda!')
+            }
+
+  # Obtain Route
+  ObtainRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ApiGateway
+      RouteKey: GET /obtain/{file_name}
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref ApiAuthorizer
+      Target: !Sub 'integrations/${ObtainIntegration}'
+  
+  ObtainIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref ApiGateway
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ObtainFunction.Arn}/invocations'
+      PayloadFormatVersion: "2.0"
+  
+  ObtainPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ObtainFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*'
+  
+  ObtainFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: ObtainS3Read
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                Resource: !Sub '${ImagesBucket.Arn}/*'
+              - Effect: Allow
+                Action:
+                  - s3:GetBucketLocation
+                Resource: !GetAtt ImagesBucket.Arn
+  
+  ObtainFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.13
+      Handler: index.lambda_handler
+      Role: !GetAtt ObtainFunctionRole.Arn
+      Environment:
+        Variables:
+          IMAGES_BUCKET_NAME: !Ref ImagesBucket
+          SIGNED_URL_READ_EXPIRATION: !Ref SignedURLReadExpiration
+      Code:
+        ZipFile: |
+          import json
+
+          def lambda_handler(event, context):
+            # TODO implement
+            return {
+              'statusCode': 200,
+              'body': json.dumps('Hello from Lambda!')
+            }
+
+  # Scan Route
+  ScanRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ApiGateway
+      RouteKey: GET /scan
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref ApiAuthorizer
+      Target: !Sub 'integrations/${ScanIntegration}'
+  
+  ScanIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref ApiGateway
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ScanFunction.Arn}/invocations'
+      PayloadFormatVersion: "2.0"
+  
+  ScanPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ScanFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*'
+  
+  ScanFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: ScanReadDDB
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:Scan
+                  - dynamodb:Query
+                Resource: 
+                  - !GetAtt ImagesRegistryTable.Arn
+                  - !Sub '${ImagesRegistryTable.Arn}/index/*'
+  
+  ScanFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.13
+      Handler: index.lambda_handler
+      Role: !GetAtt ScanFunctionRole.Arn
+      Environment:
+        Variables:
+          IMAGES_TABLE_NAME: !Ref ImagesRegistryTable
+      Code:
+        ZipFile: |
+          import json
+
+          def lambda_handler(event, context):
+            # TODO implement
+            return {
+              'statusCode': 200,
+              'body': json.dumps('Hello from Lambda!')
+            }
+
+Outputs:
+
+  ApiGatewayUrl:
+    Description: 'API Gateway endpoint URL'
+    Value: !Sub 'https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod'
