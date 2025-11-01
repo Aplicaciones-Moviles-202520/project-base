@@ -30,7 +30,7 @@ El sistema backend-serverless estará compuesto por los siguientes componentes d
 
 Para el despliegue de esta infraestructura se provee una plantilla de CloudFormation que crea y configura todos los recursos necesarios, incluyendo los permisos IAM adecuados para cada componente. En este template se ha optado por trabajar con recursos nombrados dinámicamente, es decir, CloudFormation determinará en tiempo de despliegue un nombre para los diferentes recursos y no se podrá saber los nombres hasta después de desplegados. No obstante, los nombres de los recursos estarán disponibles para las funciones Lambda a través de variables de entorno.
 
-> ⚠️ **Importante**: Si bien la conexión a la API será principalmente entre el back-server y back-serverless, el uso de obtain y scan en el futuro serán usados desde el frontend. Por lo tanto, es neceario configurar CORS adecuadamente en API Gateway para permitir solicitudes desde el dominio del frontend de TravelLog. El template de CloudFormation incluye un parámetro `AllowedOrigins` para configurar los orígenes permitidos en CORS.
+> ⚠️ **Importante**: Si bien la conexión a la API será principalmente entre el back-server y back-serverless, el uso de obtain y scan en el futuro serán usados desde el frontend. Por lo tanto, es necesario configurar CORS adecuadamente en API Gateway para permitir solicitudes desde el dominio del frontend de TravelLog. El template de CloudFormation incluye un parámetro `AllowedOrigins` para configurar los orígenes permitidos en CORS.
 
 ### Flujo del Sistema
 
@@ -223,7 +223,7 @@ SIGNED_URL_READ_EXPIRATION: duración de la signed URL en segundos (default: 30)
             },
             ...
         ],
-        "total_count": <total_de_imagenes_encontradas>,
+        "total_count": <total_de_imágenes_encontradas>,
         "images": [
             "user_id-image_hash.extension",
             ...
@@ -317,7 +317,7 @@ Cada componente será evaluado en escala 0-5:
 - Template de CloudFormation actualizado en `/serverless/infrastructure.yaml`
 - Informe de implementación en `/serverless/README.2.md`
 
-**Fecha límite**: Martes 4/11/2025 a las 23:59 hrs.
+**Fecha límite**: Miércoles 5/11/2025 a las 23:59 hrs.
 
 ## Recursos de Referencia
 
