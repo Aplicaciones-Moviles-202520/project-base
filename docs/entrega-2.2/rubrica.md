@@ -120,3 +120,15 @@ Cada componente será evaluado en escala 0-5:
 
 -   El sistema completo funciona correctamente sin almacenamiento local de imágenes
 -   Se mantiene la integridad de datos y la experiencia de usuario
+
+### E.2 Implementación de layer para el resizing de imágenes
+
+#### E.2.1 Layer desarrollada correctamente
+
+- El template considera la creación de la layer, o la layer se crea a mano y es referenciada. La relevancia está en haber sido capaz de haber desarrollado una layer
+- La layer se encuentra instalada de forma correcta, y la función apunta a una versión válida de la layer
+
+#### E.2.2 Gestión de imágenes
+
+- La función lambda procesa las imágenes antes de enviarlas a Rekognition, enviando una versión reducida que permite su envío como Raw Bytes
+- La imagen para labeling es eliminada luego de su uso
