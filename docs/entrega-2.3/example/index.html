@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TravelLog-PhotoViewer</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100vh;
+        font-family: sans-serif;
+      }
+
+      body > div {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px;
+        background-color: silver;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+        align-items: center;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        padding: 0px;
+      }
+
+      dialog {
+        border: none;
+        width: 100vw;
+        height: 100vh;
+        backdrop-filter: blur(4px);
+        background-color: rgba(255, 255, 255, 0.21);
+      }
+
+      dialog > div {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        aspect-ratio: 1 / 1;
+        background-color: silver;
+        border: 1px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      dialog > div > img {
+        max-width: 90%;
+        max-height: 90%;
+      }
+
+      h2,
+      h3,
+      h4 {
+        cursor: pointer;
+        padding: 8px;
+        margin: 0px;
+        border-bottom: 1px solid black;
+      }
+
+      h1 {
+        font-size: 1.2rem;
+      }
+
+      h2 {
+        font-size: 1.1rem;
+        background-color: lightgray;
+      }
+
+      h3 {
+        font-size: 1rem;
+        background-color: gainsboro;
+        padding-left: 16px;
+      }
+
+      h4 {
+        font-size: 0.9rem;
+        background-color: whitesmoke;
+        padding-left: 24px;
+      }
+
+      ul {
+        list-style: none;
+      }
+
+      li {
+        cursor: pointer;
+        padding: 8px 32px;
+      }
+
+      button,
+      select {
+        padding: 8px;
+        border: 1px solid black;
+        border-radius: 8px;
+      }
+
+      header > button {
+        width: 25%;
+      }
+
+      section {
+        display: flex;
+        flex-direction: column;
+      }
+
+      section[hidden] {
+        display: none;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 8px;
+        border-bottom: 1px solid black;
+      }
+
+      form > div {
+        display: flex;
+        gap: 8px;
+      }
+
+      form > div > * {
+        flex: 1;
+      }
+
+      .scrollable {
+        flex: 1;
+        overflow-y: auto;
+      }
+
+      #labels .scrollable {
+        align-content: center;
+      }
+
+      section.activity[active] {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        flex: 1;
+        overflow: hidden;
+        border-bottom: 1px solid black;
+      }
+
+      section.activity[active] > section {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        flex: 1;
+      }
+
+      section.activity:not([active]) > section {
+        display: none;
+      }
+
+      section.post > div {
+        border-bottom: 1px solid black;
+      }
+
+      div.grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4px;
+        padding: 8px;
+      }
+
+      div.grid > div {
+        border: 1px solid black;
+        background: #f9f9f9;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      div.grid > div > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <dialog id="modal" onclick="this.close()">
+      <div><img src="sample.webp" alt="Imagen ampliada" /></div>
+    </dialog>
+    <div>
+      <header>
+        <button type="button" onclick="alert('Prueba');">Probar</button>
+        <h1>ICC4203 - G00</h1>
+        <button type="button" onclick="alert('Actualización');">Actualizar</button>
+      </header>
+      <main>
+        <section id="viewer" class="activity" active>
+          <h2 onclick="document.getElementById('viewer').toggleAttribute('active');document.getElementById('labels').toggleAttribute('active');">Visor de viajes</h2>
+          <section>
+            <div class="scrollable">
+              <article>
+                <h3 onclick="event.target.nextElementSibling.toggleAttribute('hidden');">Primer viaje</h3>
+                <section>
+                  <section class="post">
+                    <h4 onclick="event.target.nextElementSibling.toggleAttribute('hidden');">Algún post</h4>
+                    <div>
+                      <ul>
+                        <li onclick="document.getElementById('modal').show()">Foto 1</li>
+                        <li onclick="document.getElementById('modal').show()">Foto 2</li>
+                        <li onclick="document.getElementById('modal').show()">Foto 3</li>
+                      </ul>
+                    </div>
+                  </section>
+                  <section class="post">
+                    <h4 onclick="event.target.nextElementSibling.toggleAttribute('hidden');">Otro post</h4>
+                    <div>
+                      <ul>
+                        <li onclick="document.getElementById('modal').show()">Foto 4</li>
+                        <li onclick="document.getElementById('modal').show()">Foto 5</li>
+                      </ul>
+                    </div>
+                  </section>
+                </section>
+              </article>
+              <article>
+                <h3 onclick="event.target.nextElementSibling.toggleAttribute('hidden');">Segundo viaje</h3>
+                <section hidden>
+                  <section class="post">
+                    <h4 onclick="event.target.nextElementSibling.toggleAttribute('hidden');">Otro post mas</h4>
+                    <div hidden>
+                      <ul>
+                        <li onclick="document.getElementById('modal').show()">Foto 6</li>
+                        <li onclick="document.getElementById('modal').show()">Foto 7</li>
+                        <li onclick="document.getElementById('modal').show()">Foto 8</li>
+                        <li onclick="document.getElementById('modal').show()">Foto 9</li>
+                      </ul>
+                    </div>
+                  </section>
+                </section>
+              </article>
+              <article>
+                <h3 onclick="event.target.nextElementSibling.toggleAttribute('hidden');">Tercer viaje</h3>
+                <section>
+                  <section class="post">
+                    <h4 onclick="event.target.nextElementSibling.toggleAttribute('hidden');">Algún post</h4>
+                    <div>
+                      <ul>
+                        <li onclick="document.getElementById('modal').show()">Foto 1</li>
+                        <li onclick="document.getElementById('modal').show()">Foto 2</li>
+                        <li onclick="document.getElementById('modal').show()">Foto 3</li>
+                      </ul>
+                    </div>
+                  </section>
+                  <section class="post">
+                    <h4 onclick="event.target.nextElementSibling.toggleAttribute('hidden');">Otro post</h4>
+                    <div>
+                      <ul>
+                        <li onclick="document.getElementById('modal').show()">Foto 4</li>
+                        <li onclick="document.getElementById('modal').show()">Foto 5</li>
+                      </ul>
+                    </div>
+                  </section>
+                </section>
+              </article>
+            </div>
+          </section>
+        </section>
+        <section id="labels" class="activity">
+          <h2 onclick="document.getElementById('viewer').toggleAttribute('active');document.getElementById('labels').toggleAttribute('active');">Explorador de etiquetas</h2>
+          <section>
+            <form onsubmit="alert('Buscar'); return false;">
+              <div>
+                <select>
+                  <option>Perro</option>
+                  <option>Playa</option>
+                  <option>Montaña</option>
+                  <option>Comida</option>
+                </select>
+                <select>
+                  <option>Incluir &gt; 90%</option>
+                  <option>Incluir &gt; 75%</option>
+                  <option>Excluir &gt; 90%</option>
+                  <option>Excluir &gt; 75%</option>
+                </select>
+              </div>
+              <button type="submit" class="btn">Obtener</button>
+            </form>
+            <div class="scrollable">
+              <div class="grid">
+                <div onclick="document.getElementById('modal').show()"><img src="sample.webp" /></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
