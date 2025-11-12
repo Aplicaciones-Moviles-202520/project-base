@@ -31,30 +31,38 @@ Para la descripción de la aplicación se utilizará una estrategia de desarroll
 ### Organización del desarrollo
 
 - [Epic 1: Implementación inicial de la PWA](#epic-1-implementacion-inicial-de-la-pwa)
-  - [US-PWA-01 - Adaptación de maqueta a React y pantalla de inicio de sesión](#us-pwa-01---adaptacion-de-maqueta-a-react-y-pantalla-de-inicio-de-sesion)
+  - [US-PWA-01 - Integración de maqueta en React](#us-PWA-01---integracion-de-maqueta-en-react)
+  - [US-PWA-02 - Login UI con validaciones](#us-PWA-02---login-ui-con-validaciones)
   - [US-Auth-01 - Inicio de sesión con credenciales existentes](#us-auth-01---inicio-de-sesion-con-credenciales-existentes)
   - [US-Auth-02 - Persistencia y restauración de sesión](#us-auth-02---persistencia-y-restauracion-de-sesion)
   - [US-Auth-03 - Cierre de sesión](#us-auth-03---cierre-de-sesion)
 - [Epic 2: Compilación estática y despliegue en S3 + CloudFront](#epic-2-compilacion-estatica-y-despliegue-en-s3--cloudfront)
   - [US-Build-01 - Compilación estática de la PWA](#us-build-01---compilacion-estatica-de-la-pwa)
-  - [US-Deploy-01 - Sitio disponible vía CloudFront](#us-deploy-01---sitio-disponible-via-cloudfront)
-  - [US-PWA-02 - Instalación como PWA en Android](#us-pwa-02---instalacion-como-pwa-en-android)
-  - [US-API-01 - Conectividad API y prueba](#us-api-01---conectividad-de-api-y-boton-de-prueba)
+  - [US-Deploy-01 - Sitio disponible via CloudFront y HTTPS](#us-deploy-01---sitio-disponible-via-cloudfront-y-https)
+  - [US-Deploy-02 - IaC: Infra core + certificado y dominio](#us-deploy-02---iac-infra-core--certificado-y-dominio)
+  - [US-PWA-03 - Instalación como PWA](#us-pwa-03---instalacion-como-pwa)
+  - [US-API-01 - Backend: heartbeat y CORS](#us-API-01---backend-heartbeat-y-cors)
+  - [US-API-02 - Frontend: botón Probar y manejo de errores](#us-API-02---frontend-boton-probar-y-manejo-de-errores)
 - [Epic 3: Recuperación y visualización básica de datos](#epic-3-recuperacion-y-visualizacion-basica-de-datos)
-  - [US-Data-01 - Construcción inicial del árbol](#us-data-01---construccion-inicial-del-arbol)
-  - [US-Data-02 - Botón de actualización completa](#us-data-02---boton-de-actualizacion-completa)
-  - [US-Data-03 - Visualización en acordeón](#us-data-03---visualizacion-en-acordeon)
-  - [US-Data-04 - Caché y modo sin conexión](#us-data-04-cache-y-modo-sin-conexion)
+  - [US-Data-01 - Fetch y ensamblado del árbol](#us-Data-01---fetch-y-ensamblado-del-arbol)
+  - [US-Data-02 - Persistencia en localStorage y arranque desde caché](#us-Data-02---persistencia-en-localstorage-y-arranque-desde-cache)
+  - [US-Data-03 - Botón de actualización completa](#us-Data-03---boton-de-actualizacion-completa)
+  - [US-Data-04 - Visualización en acordeón](#us-Data-04---visualizacion-en-acordeon)
+  - [US-Data-05 - Caché y modo sin conexión](#us-Data-05-cache-y-modo-sin-conexion)
 - [Epic 4: Visualización de imágenes con modal y caché](#epic-4-visualizacion-de-imagenes-con-modal-y-cache)
   - [US-Image-01 - Lista de vínculos por imagen usando el content del post](#us-image-01---lista-de-vinculos-por-imagen-usando-el-content-del-post)
-  - [US-Image-02 - Modal bloqueante de imagen y estados](#us-image-02---modal-bloqueante-de-imagen-y-estados)
-  - [US-Image-03 - Caché de las últimas 9 imágenes vistas](#us-image-03---cache-de-las-ultimas-9-imagenes-vistas)
-  - [US-Image-04 - Comportamiento sin conexión en el modal](#us-image-04---comportamiento-sin-conexion-en-el-modal)
+  - [US-Image-02 - Modal: camino feliz (obtain, redirect, render)](#US-Image-02---modal-camino-feliz-obtain-redirect-render)
+  - [US-Image-03 - Modal: errores y reintentos](#US-Image-03---modal-errores-y-reintentos)
+  - [US-Image-04 - Caché: almacenamiento de imágenes vistas](#US-Image-04---cache-almacenamiento-de-imagenes-vistas)
+  - [US-Image-05 - Caché: política LRU de 9 imágenes](#US-Image-05---cache-politica-lru-de-9-imagenes)
+  - [US-Image-06 - Comportamiento sin conexión en el modal](#US-Image-06---comportamiento-sin-conexion-en-el-modal)
 - [Epic 5: Buscador semántico](#epic-5-buscador-semantico)
-  - [US-Sem-01 - Formulario de etiqueta y umbral](#us-sem-01---formulario-de-etiqueta-y-umbral)
-  - [US-Sem-02 - Grilla 3x3 de resultados](#us-sem-02---grilla-3x3-de-resultados)
-  - [US-Sem-03 - Modal al hacer clic sobre thumbnail](#us-sem-03---modal-al-hacer-clic-sobre-thumbnail)
-  - [US-Sem-04 - Estados de carga y errores en buscador](#us-sem-04---estados-de-carga-y-errores-en-buscador)
+  - [US-Sem-01 - UI y mapeo de etiquetas](#US-Sem-01---ui-y-mapeo-de-etiquetas)
+  - [US-Sem-02 - Integración API: construcción de query `scan` y fetch](#US-Sem-02---integracion-api-construccion-de-query-scan-y-fetch)
+  - [US-Sem-03 - Grilla 3x3: layout y placeholders](#US-Sem-03---grilla-3x3-layout-y-placeholders)
+  - [US-Sem-04 - Grilla 3x3: reutilización de caché sin refetch](#US-Sem-04---grilla-3x3-reutilizacion-de-cache-sin-refetch)
+  - [US-Sem-05 - Modal al hacer clic sobre thumbnail](#US-Sem-05---modal-al-hacer-clic-sobre-thumbnail)
+  - [US-Sem-06 - Estados de carga y errores en buscador](#US-Sem-06---estados-de-carga-y-errores-en-buscador)
 
 ## Epic 1: Implementación inicial de la PWA
 
@@ -100,24 +108,30 @@ Objetivo: Inicializar la aplicación React y habilitar el acceso con las credenc
 
 - Login, persistencia de sesión y logout funcionando en navegador de escritorio
 
-#### US-PWA-01 - Adaptación de maqueta a React y pantalla de inicio de sesión
+#### US-PWA-01 - Integración de maqueta en React
 
 - Historia de usuario:
-  - Como desarrollador, quiero adaptar la maqueta HTML/CSS/JS a componentes de React y construir la pantalla de inicio de sesión para acelerar la implementación de autenticación
+  - Como desarrollador, quiero adaptar la maqueta HTML/CSS/JS a componentes de React para acelerar la implementación
 - Criterios de aceptación:
-  - La aplicación React está inicializada con el framework elegido (Vite, Create React App, Next u otro similar) y tiene estructura mínima lista para desarrollo local
-  - La maqueta está integrada en React: se desglosa en componentes reutilizables (por ejemplo: Header, MainContainer, LoginView) conservando estilos y comportamiento visual
+  - La aplicación React está inicializada con el framework elegido (Vite, CRA, Next u otro) y tiene estructura mínima lista para desarrollo local
+  - La maqueta está integrada en React: se desglosa en componentes reutilizables (p. ej.: Header, MainContainer) conservando estilos y comportamiento visual
+
+#### US-PWA-02 - Login UI con validaciones
+
+- Historia de usuario:
+  - Como desarrollador, quiero construir la pantalla de inicio de sesión con validaciones básicas y un submit para luego conectar la API
+- Criterios de aceptación:
   - Existe una vista de “Inicio de sesión” con campos de usuario/email y contraseña, y un botón “Ingresar”
   - Validaciones básicas en cliente: campos requeridos y mensajes de error visibles en la propia vista
-  - El envío del formulario invoca una función interna (stub) que luego se conectará a la API en US-Auth-01; en esta historia no es obligatorio llamar al backend
+  - El envío del formulario invoca una función interna que se debe conectar a la API en US-Auth-01
   - La app muestra la vista de inicio de sesión por defecto cuando no hay sesión activa
 
 ## Epic 2: Compilación estática y despliegue en S3 + CloudFront
 
-Objetivo: Compilar la aplicación como sitio estático y disponibilizarla públicamente desde un bucket S3 servido mediante una distribución CloudFront. Se aceptan dos modalidades de implementación:
+Objetivo: Compilar la aplicación como sitio estático y disponibilizarla públicamente desde un bucket S3 servido mediante una distribución CloudFront. Esto se puede hacer de dos formas:
 
 - **Manual (consola web AWS)**: se debe crear un bucket S3 (privado, acceso solo vía CloudFront), se debe crear una distribución CloudFront con Origin Access Control (OAC) apuntando al bucket, se debe configurar una política de caché deshabilitada (TTL 0; `Managed-CachingDisabled` o equivalente), se debe asociar el dominio previsto en `exampledomain.cloud` con un certificado SSL emitido y validado por AWS Certificate Manager (ACM), se debe ajustar la política del bucket para permitir OAC y se deben subir los artefactos de build
-- **Infraestructura como Código**: se debe extender el template de CloudFormation de la entrega 2.2 agregando recursos S3 + CloudFront (+ OAC, políticas, outputs), se debe deshabilitar caché en la distribución (TTL 0; cache policy sin almacenamiento) y se debe asociar el dominio provisto con certificado de ACM (se puede parametrizar el ARN del certificado). Puede tomarse como referencia el ejemplo de despliegue del laboratorio 9
+- **Infraestructura como Código**: se puede extender el template de CloudFormation de la entrega 2.2 agregando recursos S3 + CloudFront (+ OAC, políticas, outputs), se debe deshabilitar caché en la distribución (TTL 0; cache policy sin almacenamiento) y se debe asociar el dominio provisto con certificado de ACM (se puede parametrizar el ARN del certificado). Puede tomarse como referencia el ejemplo de despliegue del laboratorio 9
 
 ### Historias de usuario
 
@@ -129,32 +143,41 @@ Objetivo: Compilar la aplicación como sitio estático y disponibilizarla públi
   - El proyecto compila a assets estáticos (HTML/CSS/JS/manifest/iconos) mediante el script de build del frontend
   - El resultado queda en una carpeta de salida lista para ser subida a S3
 
-#### US-Deploy-01 - Sitio disponible vía CloudFront
+#### US-Deploy-01 - Sitio disponible via CloudFront y HTTPS
 
 - Historia de usuario:
   - Como usuario final, quiero acceder a la PWA mediante una URL pública de CloudFront para poder usarla desde el celular
 - Criterios de aceptación:
-
   - Existe un bucket S3 con los artefactos de build y una distribución CloudFront configurada como CDN del bucket
   - La distribución usa una política de caché deshabilitada (TTL 0) para evitar invalidaciones durante esta entrega
-  - La URL pública de CloudFront carga correctamente la aplicación (`start_url` en modo `standalone` al instalar)
+  - La URL pública de CloudFront (dominio por defecto de CF) carga correctamente la aplicación; SPA fallback configurado si aplica
   - Los tipos MIME/headers permiten servir correctamente HTML, JS, CSS, imágenes, manifest e iconos
-
-  - El dominio provisto para el grupo resuelve a la distribución de CloudFront
+  - El dominio provisto para el grupo resuelve a la distribución de CloudFront mediante alias
   - La distribución tiene asociado un certificado válido emitido por AWS Certificate Manager (ACM) para ese dominio
   - La PWA es accesible vía HTTPS en el dominio provisto
 
-#### US-PWA-02 - Instalación como PWA en Android
+#### US-Deploy-02 - IaC: Infra core + certificado y dominio (ACM/Route53)
+
+- Historia de usuario:
+  - Como responsable de despliegue, quiero automatizar el despliegue de la infraestructura (core + certificado/dominio) mediante IaC para asegurar consistencia y reproducibilidad
+- Criterios de aceptación:
+  - Existe un template de CloudFormation o equivalente que despliega los recursos core necesarios para la PWA (S3, CloudFront con OAC, políticas del bucket/origen, outputs)
+  - El template permite asociar un dominio provisto a la distribución (alias) y un certificado de ACM (ARN parametrizable)
+  - Se documenta la validación DNS del certificado (si aplica) y el proceso de enlace con CloudFront
+  - El despliegue puede realizarse con un solo comando o acción automatizada
+  - El template está versionado y documentado
+
+#### US-PWA-03 - Instalación como PWA
 
 - Historia de usuario:
   - Como usuario móvil, quiero instalar la app desde el navegador para usarla como app independiente
 - Criterios de aceptación:
   - Web App Manifest válido: `name`, `short_name`, `start_url`, `scope`, `display=standalone`, `theme_color`, `background_color`, `icons` (192, 512)
   - Service Worker mínimo registrado (sin requerir cache offline)
-  - El navegador permite "Instalar app" desde el menú del navegador y, tras instalar, la app abre en modo `standalone` con su ícono
+  - El navegador permite "Instalar app" desde el menú y, tras instalar, la app abre en modo `standalone` con su ícono
   - No es necesario implementar un botón de "Instalar" en la UI
 
-#### US-API-01 - Conectividad de API y botón de prueba
+#### US-API-01 - Backend: heartbeat y CORS
 
 - Historia de usuario:
   - Como desarrollador, necesito un endpoint simple que confirme conectividad y CORS antes de avanzar con funcionalidades complejas
@@ -162,6 +185,12 @@ Objetivo: Compilar la aplicación como sitio estático y disponibilizarla públi
   - Tanto el backend-server como el backend-serverless exponen un endpoint `GET /heartbeat` que retorna un mensaje aleatorio en cada solicitud, p. ej.: `{ "message": "<texto_aleatorio>" }`
   - CORS está configurado para permitir solicitudes específicamente desde el dominio de la PWA en CloudFront (sin wildcard `*`)
   - El endpoint responde con 200 en menos de 1s bajo condiciones normales
+
+#### US-API-02 - Frontend: botón Probar y manejo de errores
+
+- Historia de usuario:
+  - Como desarrollador, quiero verificar desde la PWA la conectividad a ambos backends con manejo de errores
+- Criterios de aceptación:
   - La PWA obtiene la URL base de la API desde variables de entorno de build o archivo de configuración versionado (no hardcodeada)
   - Las solicitudes desde el dominio de CloudFront a la API pasan validación CORS (si aplica) sin errores
   - Existe un botón "Probar" en la UI
@@ -177,6 +206,7 @@ Objetivo: Compilar la aplicación como sitio estático y disponibilizarla públi
 - Build estático reproducible y artefactos desplegados en S3
 - Distribución CloudFront operativa con URL pública y política de caché deshabilitada que carga la PWA correctamente
 - Dominio provisto configurado en CloudFront con certificado SSL de ACM; acceso HTTPS validado
+- PWA instalable: manifest válido (iconos 192/512, start_url/scope/display) y Service Worker mínimo registrado; instalación y apertura en modo `standalone` verificada en Android
 - Endpoint `/heartbeat` disponible en backend-server con CORS habilitado para el dominio de la PWA
 - La PWA incluye un botón que invoca `/heartbeat` y muestra un alert con el texto retornado
 
@@ -194,17 +224,23 @@ La aplicación debe utilizar `localStorage` para guardar el árbol serializado y
 
 ### Historias de usuario
 
-#### US-Data-01 - Construcción inicial del árbol
+#### US-Data-01 - Fetch y ensamblado del árbol
 
 - Historia de usuario:
   - Como usuario autenticado, quiero que la aplicación construya un acordeón Trips > Posts > Pictures para explorar mi contenido
 - Criterios de aceptación:
-  - Al entrar, si existe un árbol cacheado se muestra directamente sin pedir datos al servidor
-  - Si no existe árbol cacheado y el usuario desea verlo, se debe obtener automáticamente el árbol completo inicial
-  - Se persiste en caché local una estructura serializada con todos los Trips, cada uno con sus Posts y cada Post con sus Pictures
-  - Se muestran solo los campos definidos en alcance
+  - Si no existe árbol cacheado y el usuario desea verlo, se debe obtener automáticamente el árbol completo inicial (Trips, Posts, Pictures)
+  - Se construye en memoria la estructura Trips > Posts > Pictures con sólo los campos definidos en alcance
 
-#### US-Data-02 - Botón de actualización completa
+#### US-Data-02 - Persistencia en localStorage y arranque desde caché
+
+- Historia de usuario:
+  - Como usuario, quiero que el árbol obtenido quede guardado y que la app arranque leyéndolo si existe
+- Criterios de aceptación:
+  - Se persiste en caché local (localStorage) una estructura serializada con todos los Trips, con sus Posts y Pictures
+  - Al entrar, si existe un árbol cacheado se muestra directamente sin pedir datos al servidor
+
+#### US-Data-03 - Botón de actualización completa
 
 - Historia de usuario:
   - Como usuario, quiero forzar una actualización completa para reconstruir el árbol con datos frescos
@@ -213,7 +249,7 @@ La aplicación debe utilizar `localStorage` para guardar el árbol serializado y
   - Al presionarlo, se vuelven a obtener todos los Trips, Posts y Pictures y se reemplaza el árbol en memoria y cache
   - Durante la actualización se muestra estado el estado cargando
 
-#### US-Data-03 - Visualización en acordeón
+#### US-Data-04 - Visualización en acordeón
 
 - Historia de usuario:
   - Como usuario, quiero ver un acordeón donde cada Trip despliega sus Posts y cada Post muestra las URLs de sus Pictures
@@ -221,7 +257,7 @@ La aplicación debe utilizar `localStorage` para guardar el árbol serializado y
   - La interfaz presenta un acordeón: nivel 1 (Trips), nivel 2 (Posts), nivel 3 listado plana de URLs de Pictures
   - Si un Trip no tiene Posts o un Post no tiene Pictures, se muestra mensaje ("Sin posts" / "Sin imágenes")
 
-#### US-Data-04 Caché y modo sin conexión
+#### US-Data-05 Caché y modo sin conexión
 
 - Historia de usuario:
   - Como usuario, quiero poder abrir la app sin conexión y ver el último árbol descargado
@@ -292,7 +328,7 @@ El caché de las imágenes debe estar implementado mediante la [Cache Storage AP
   - Se mantiene un enlace por cada Picture asociado al Post
   - Al hacer clic en un enlace, no se navega a otra página: se abre un modal bloqueante
 
-#### US-Image-02 - Modal bloqueante de imagen y estados
+#### US-Image-02 - Modal: camino feliz (obtain, redirect, render)
 
 - Historia de usuario:
   - Como usuario, quiero que el modal muestre la imagen correspondiente a un link del post obtenida desde la API `obtain` y me entregue estados claros de carga, éxito y error.
@@ -300,23 +336,36 @@ El caché de las imágenes debe estar implementado mediante la [Cache Storage AP
   - Al abrir el modal, la app invoca el endpoint `obtain` del backend-serverless para esa imagen y sigue el redirect (302) hacia la signed URL
   - Mientras se descarga, el modal muestra un estado de carga (spinner o similar); al terminar, se renderiza la imagen
   - El modal bloquea la interacción con el resto de la UI
+
+#### US-Image-03 - Modal: errores y reintentos
+
+- Historia de usuario:
+  - Como usuario, quiero mensajes claros ante errores y poder reintentar sin efectos colaterales
+- Criterios de aceptación:
   - Errores de autorización (401) redirigen a login
   - Un error 404 muestra "Imagen no encontrada". Otros errores muestran mensaje genérico
   - Estados visibles diferenciados: cargando, listo, error (401/404/otros)
   - Tras un error, es posible cerrar el modal y reintentar abriendo el enlace nuevamente sin efectos colaterales
 
-#### US-Image-03 - Caché de las últimas 9 imágenes vistas
+#### US-Image-04 - Caché: almacenamiento de imágenes vistas
 
 - Historia de usuario:
   - Como usuario, quiero que las últimas 9 imágenes que abrí queden disponibles sin conexión para poder verlas posteriormente
 - Criterios de aceptación:
-  - Las imágenes visualizadas en el modal se almacenan en un caché local (por ejemplo, `Cache Storage API` o `IndexedDB` Blob) con una política de "últimas 9" fotos únicas
-  - Por fotos únicas se refiere a que si una misma foto es accedida más de entre las 9 últimas visualizaciones, a fin del caché se considera como una sola entrada (no se duplica)
-  - Al agregar una décima imagen, se elimina físicamente la menos recientemente usada hasta volver al máximo de 9
+  - Las imágenes visualizadas en el modal se almacenan en un caché local (por ejemplo, `Cache Storage API` o `IndexedDB` Blob) con una política de fotos únicas (una entrada por imagen)
+  - Por fotos únicas se refiere a que si una misma foto es accedida dentro de las últimas visualizaciones, se considera una sola entrada (no se duplica)
   - La implementación debe eliminar el contenido de caché de imágenes que se tenga como parte de la aplicación, no solo marcarlas expiradas
-  - No es necesario alterar el comportamiento del browser respecto a su caché HTTP estándar; la política de 9 imágenes se aplica exclusivamente al almacenamiento explícito implementado en la PWA
+  - No es necesario alterar el comportamiento del browser respecto a su caché HTTP estándar
 
-#### US-Image-04 - Comportamiento sin conexión en el modal
+#### US-Image-05 - Caché: política LRU de 9 imágenes
+
+- Historia de usuario:
+  - Como usuario, quiero que sólo se conserven las 9 fotos más recientes y que las más antiguas se eliminen
+- Criterios de aceptación:
+  - Se mantiene una política LRU con un máximo de 9 fotografías
+  - Al agregar una décima imagen, se elimina físicamente la menos recientemente usada hasta volver al máximo de 9
+
+#### US-Image-06 - Comportamiento sin conexión en el modal
 
 - Historia de usuario:
   - Como usuario, quiero que si no tengo conexión y abro una imagen previamente vista, esta se muestre; y si no estaba cacheada, se me informe claramente
@@ -353,28 +402,41 @@ Objetivo: Implementar la sección de "Explorador de etiquetas". Esta sección pe
 
 ### Historias de usuario
 
-#### US-Sem-01 - Formulario de etiqueta y umbral
+#### US-Sem-01 - UI y mapeo de etiquetas
 
 - Historia de usuario:
   - Como usuario, quiero elegir una etiqueta y un criterio de inclusión/exclusión con umbral para buscar fotos
 - Criterios de aceptación:
-  - Select de etiquetas: exactamente 25 opciones, con nombres en español de etiquetas de Rekognition pero mapeadas internamente a etiquetas en inglés para llamar a `scan` (como fue implementado en 2.2)
+  - Select de etiquetas: exactamente 25 opciones, con nombres en español mapeados internamente a etiquetas en inglés para llamar a `scan` (como fue implementado en 2.2)
   - Las 25 etiquetas son fijas y pueden estar hardcodeadas en el frontend
   - Select de criterio: opciones "incluir > 90", "incluir > 75", "excluir > 90", "excluir > 75"
-  - Al presionar "Obtener", se construye el query de `scan` y se obtiene la lista de imágenes
 
-#### US-Sem-02 - Grilla 3x3 de resultados
+#### US-Sem-02 - Integración API: construcción de query `scan` y fetch
+
+- Historia de usuario:
+  - Como usuario, quiero obtener resultados al presionar "Obtener" según la etiqueta y criterio seleccionados
+- Criterios de aceptación:
+  - Al presionar "Obtener", se construye el query de `scan` con un sólo filtro `label` que combine etiqueta, operador (`>` para incluir, `<` para excluir) y umbral (90 o 75)
+  - Se obtiene la lista de imágenes desde el endpoint `scan`
+
+#### US-Sem-03 - Grilla 3x3: layout y placeholders
 
 - Historia de usuario:
   - Como usuario, quiero ver hasta 9 resultados de búsqueda semántica en una grilla 3x3 con thumbnails cuadrados del mismo tamaño
 - Criterios de aceptación:
-  - Si el endpoint `scan` retorna 9 o más imágenes, se muestran cualquier 9 (no se requiere determinismo ni persistencia del subconjunto; no hay paginación).
+  - Si el endpoint `scan` retorna 9 o más imágenes, se muestran cualquier 9 (no se requiere determinismo ni persistencia del subconjunto; no hay paginación)
   - Si retorna menos de 9, los espacios faltantes se completan con un placeholder que hace claro que no hay más fotografías que las que se muestran
   - Los thumbnails mantienen proporciones cuadradas uniformes (p. ej., CSS `object-fit: cover` sobre contenedores cuadrados fijos)
+
+#### US-Sem-04 - Grilla 3x3: reutilización de caché sin refetch
+
+- Historia de usuario:
+  - Como usuario, quiero que si ya vi una imagen, la grilla la use desde el caché sin volver a descargarla
+- Criterios de aceptación:
   - La imagen utilizada por cada thumbnail es la misma fuente/objeto que utiliza el modal (no se generan thumbnails separados ni duplicados del recurso en caché)
   - Si alguna de las imágenes de la grilla ya está en caché (últimas 9 vistas del modal), se debe usar esa versión y no hacer fetch adicional
 
-#### US-Sem-03 - Modal al hacer clic sobre thumbnail
+#### US-Sem-05 - Modal al hacer clic sobre thumbnail
 
 - Historia de usuario:
   - Como usuario, quiero abrir el mismo modal de visualización de imágenes (Epic 4) al hacer clic en un thumbnail
@@ -382,7 +444,7 @@ Objetivo: Implementar la sección de "Explorador de etiquetas". Esta sección pe
   - El click en un thumbnail debe mostrar el modal bloqueante con la imagen correspondiente
   - La imagen se debe obtener desde el caché, considerando que la carga en la grilla dejará a todas las fotografías seleccionables como parte de las últimas 9 vistas
 
-#### US-Sem-04 - Estados de carga y errores en buscador
+#### US-Sem-06 - Estados de carga y errores en buscador
 
 - Historia de usuario:
   - Como usuario, quiero feedback claro mientras se realiza la búsqueda y ante errores
@@ -418,9 +480,7 @@ Objetivo: Implementar la sección de "Explorador de etiquetas". Esta sección pe
 
 ## Evaluación
 
-La evaluación será calificada en base a un porcentaje asociado a cada uno de los items que se indican a continuación. Todos los puntajes se sumarán para obtener la nota final de la entrega.
-
-Dada la actividad bono, el porcentaje total puede superar el 100%, en cuyo caso el porcentaje final se ajustará a 100%.
+> ⚠️ Elegibilidad: Para ser elegible para evaluación **el despliegue de la infraestructura debe ser en sa-east-1** con excepción del certificado ACM (que debe star en us-east-1) y el eventual bucket que puedan haber utilizado para resolver los problemas de tamaño de imagen de la entrega 2.2 (que puede estar en otra región). **No cumplir con esta regla es equivalente a no haber entregado**.
 
 ### Criterios de Evaluación
 
@@ -433,32 +493,42 @@ Cada historia de usuario será evaluada en escala 0-5:
 - **1**: Solución incompleta con errores graves o sin cumplir requisitos mínimos
 - **0**: No implementado o no funcional
 
-### Puntaje bono
+### Calificación Final
 
-Se utilizará la misma escala 0-5 para evaluar la actividad bono sobre la extensión del template de CloudFormation. Los dos aspectos que se considerarán son:
+Son obligatorias las siguientes 10 historias de usuario:
 
-- **Automatización completa**: El template debe permitir desplegar todos los recursos necesarios para la PWA sin intervención manual
-- **Configuración correcta**: Todos los recursos deben estar configurados adecuadamente
+- US-PWA-02 - Login UI con validaciones (stub)
+- US-Auth-01 - Inicio de sesión con credenciales existentes
+- US-Deploy-01 - Sitio disponible via CloudFront y HTTPS
+- US-PWA-03 - Instalación como PWA
+- US-Data-01 - Fetch y ensamblado del árbol
+- US-Data-02 - Persistencia en localStorage y arranque desde caché
+- US-Data-04 - Visualización en acordeón
+- US-Data-05 Caché y modo sin conexión
+- US-Image-02 - Modal: camino feliz (obtain, redirect, render)
+- US-Image-04 - Caché: almacenamiento de imágenes vistas
 
-## Consideraciones Adicionales
+Si no se obtiene a lo menos 35 puntos entre todas estas historias, la nota se calculará en base a los puntos obtenidos en estas historias obligatorias, sin considerar las demás historias de usuario. Pasado el umbral de 35 puntos, la nota se calculará en base a la suma total de puntos obtenidos en todas las historias de usuario implementadas.
 
-### Seguridad y Producción
+Este enunciado considera 28 historias de usuario, que otorgan un total de 140 puntos, sin embargo, para obtener un 7 serán necesarios solo 105 puntos (un 75% de los puntos disponibles). Esto permite que los estudiantes puedan optar por no implementar o implementar parcialmente algunas historias para obtener la nota máxima sin necesidad de completar todo el enunciado.
 
-- El sistema debe implementar autenticación JWT robusta
-- Las signed URLs deben tener tiempos de expiración apropiados
-- El acceso a imágenes debe estar correctamente restringido por usuario
+En caso que la nota final de la entrega supere el 7 (dada la cantidad de puntos disponibles podría llegar hasta 9), al momento de calcular la nota final del curso la nota de esta entrega no se limitará a 7, sino que se considerará la nota real obtenida aunque esta sea mayor a 7.
 
-## Forma y Fecha de Entrega
+### Forma y Fecha de Entrega
 
-**Entrega**: Pull request al repositorio que incluya al ayudante de proyecto asignado. El pull request debe incluir:
+**Entrega**
 
-- Código fuente completo de la PWA en la carpeta `/pwa`
-- Debe poder compilar directamente mediante un llamado a `npm install` y `npm run build` para generar los artefactos estáticos
+La entrega se realiza mediante un pull request al repositorio que incluya al ayudante de proyecto asignado. El pull request debe incluir:
+- Código fuente completo de la PWA en una carpeta `/pwa` en la raiz del repositorio
+- Se debe poder compilar directamente mediante un llamado a `npm install` y `npm run build` para generar los artefactos estáticos
+- En caso de haber desarrollado la historia **US-Deploy-02 - IaC: Infra core + certificado y dominio (ACM/Route53)**, el template de CloudFormation debe estar en `/pwa/infrastructure`
 
 **Acceso a la app**
 
-- En el buzón de Canvas se debe indicar la URL pública de la PWA desplegada en CloudFront, junto con credenciales de usuario válidas para probar la aplicación. El usuario que se entregue debe proveer las informaciones suficientes (Trips, Posts, Pictures) para probar todas las funcionalidades implementadas, incluidos diferentes filtros de etiquetas en Rekognition.
+- En el buzón de Canvas se debe indicar la URL pública de la PWA desplegada en CloudFront, junto con credenciales de usuario válidas para probar la aplicación
+- El usuario que se entregue debe proveer las informaciones suficientes (Trips, Posts, Pictures) para probar todas las funcionalidades implementadas, incluidos diferentes filtros de etiquetas en Rekognition
+- Se agradecerá indicar algunas keywords/etiquetas relevantes para probar el buscador semántico de forma más eficiente
 
 **Fecha límite**
 
-- Domingo 23/11/2025 a las 23:59 hrs
+- **Miércoles 26/11/2025 a las 23:59 hrs**
